@@ -1,8 +1,4 @@
-Here's a solid **README** for your **Divvy** project, formatted for **GitHub**, and written in a way that balances **clarity, professionalism, and a casual, engaging tone**:  
-
----
-
-# **Divvy** 💸  
+# **Divvy** 
 *A simple and efficient way to manage shared expenses*  
 
 ## 🚀 Overview  

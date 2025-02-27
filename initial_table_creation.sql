@@ -2,21 +2,17 @@
 --BEGIN;
 
 CREATE TABLE Groups(
-GroupID INTEGER NOT NULL,
+GroupID SERIAL,
 Group_Name TEXT NOT NULL,
 PRIMARY KEY(GroupID)
 );
 
-INSERT INTO Groups(GroupID, Group_Name)
-VALUES
-(1, 'Dallas Group'),
-(2, 'Austin Group'),
-(3, 'Nashville Group'),
-(4, 'Spain Group');
+-- ----------------------------------------
+
 
 CREATE TABLE Member (
-MemberID INTEGER NOT NULL,
-GroupID INTEGER NOT NULL,
+MemberID SERIAL,
+GroupID SERIAL,
 First_name TEXT NOT NULL,
 Last_Name TEXT NOT NULL,
 Bank_Account_Number INTEGER NOT NULL,
@@ -25,21 +21,53 @@ PRIMARY KEY (MemberID),
 FOREIGN KEY(GroupID) references Groups(GroupID)
 );
 
-INSERT INTO Member(MemberID, GroupID, First_name, Last_Name, Bank_Account_Number)
-VALUES
-(1,1,'Mitchell','Tawk', 123456789);
+-- ----------------------------------------
+
+CREATE TABLE Payment_send (
+	Payment_send_ID SERIAL,
+	Payment_Name TEXT NOT NULL,
+	Payment_Type TEXT NOT NULL,
+
+	PRIMARY KEY(Payment_send_ID)
+);
+
+-- ----------------------------------------
+
+CREATE TABLE Payment_recieve (
+	Payment_recieve_ID SERIAL,
+	Payment_Name TEXT NOT NULL,
+	Payment_Type TEXT NOT NULL,
+
+	PRIMARY KEY(Payment_recieve_ID)
+);
+
+-- ----------------------------------------
+
+CREATE TABLE Member_payment_send (
+	Member_payment_send_ID SERIAL,
+	MemberID SERIAL,
+	Payment_send_ID SERIAL,
+
+	PRIMARY KEY(Member_payment_send_ID),
+	FOREIGN KEY(MemberID) REFERENCES Member(MemberID),
+	FOREIGN KEY(Payment_send_ID) REFERENCES Payment(Payment_send_ID)
+);
+
+-- ----------------------------------------
+
+CREATE TABLE Member_payment_recieve (
+	Member_payment_recieve_ID SERIAL,
+	MemberID SERIAL,
+	Payment_recieve_ID SERIAL,
+
+	PRIMARY KEY(Member_payment_recieve_ID),
+	FOREIGN KEY(MemberID) REFERENCES Member(MemberID),
+	FOREIGN KEY(Payment_recieve_ID) REFERENCES Payment(Payment_recieve_ID)
+);
+
+-- ----------------------------------------
 
 
-SELECT * FROM Groups;
-SELECT * FROM Member;
-
-SELECT First_name,Last_Name
-FROM Groups G JOIN Member M ON G.GroupID = M.GroupID
-WHERE MemberID = 1;
-
-SELECT First_name,Last_Name,Bank_Account_Number
-FROM Groups G JOIN Member M ON G.GroupID = M.GroupID
-WHERE MemberID = 1
 
 
 -- Commit the transaction (if a transaction was started)

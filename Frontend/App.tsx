@@ -5,7 +5,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import BottomNavigation from './Divvy/components/BottomNavigation';
 import HomeScreen from './Divvy/components/HomeScreen'; // Ensure this is the correct path to your HomeScreen component
 
-// Placeholder screens
 const PlaceholderScreen = ({ name }: { name: string }) => (
   <View style={styles.screenContainer}>
     <Text style={styles.screenText}>{name} Screen</Text>

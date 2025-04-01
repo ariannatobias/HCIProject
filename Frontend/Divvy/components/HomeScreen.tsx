@@ -87,7 +87,6 @@ export const HomeScreen = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
       {/* Status Bar */}
       <View style={styles.statusBar}>
         <Text style={[styles.time, { color: theme.icon }]}>9:41</Text>

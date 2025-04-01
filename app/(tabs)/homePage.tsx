@@ -1,78 +1,98 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { DivWrapper } from "./DivWrapper";
+import { ElementAvatars } from "./ElementAvatars";
+import { ElementAvatarsWrapper } from "./ElementAvatarsWrapper";
+import { ElementDAvatars } from "./ElementDAvatars";
+import { ElementDAvatarsWrapper } from "./ElementDAvatarsWrapper";
+import { GmailGroups } from "./GmailGroups";
+import { Home } from "./Home";
+import { Person } from "./Person"; 
+import { Plus } from "./Plus";
+import image2 from "./image-2.svg";
+import profitIcon1 from "./profit-icon-1.png";
+import "./style.css";
 
 export const WelcomePage = () => {
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Welcome, User!</Text>
+    <div className="welcome-container" style={{ backgroundColor: "#F7F7F9" }}>
+      {/* Header */}
+      <header className="welcome-header">
+        <div className="logo-container">
+          <img src={image2} alt="Divvy Logo" className="logo" />
+        </div>
+        <h1 className="welcome-title" style={{ color: "#E86A92" }}>Welcome, User!</h1>
+      </header>
 
-      <View style={styles.section}>
-        <Text style={styles.subHeader}>Balance Summary</Text>
-        <Text style={styles.label}>You Owe:</Text>
-        <Text style={styles.amountOwe}>$21.30</Text>
-        <Text style={styles.label}>Owed To You:</Text>
-        <Text style={styles.amountOwed}>$12.15</Text>
-      </View>
+      {/* Balance Summary Card */}
+      <div className="balance-card">
+        <h2 className="section-title">Balance Summary</h2>
+        <div className="balance-info">
+          <div className="balance-item">
+            <span className="balance-label">You Owe:</span>
+            <span className="balance-amount negative" style={{ color: "#E86A92" }}>$21.30</span>
+          </div>
+          <div className="balance-item">
+            <span className="balance-label">Owed To You:</span>
+            <span className="balance-amount positive" style={{ color: "#41E2BA" }}>$12.15</span>
+          </div>
+          <button className="settle-button" style={{ backgroundColor: "#F7E733", color: "#333" }}>
+            Settle Up
+          </button>
+        </div>
+      </div>
 
-      <View style={styles.section}>
-        <Text style={styles.subHeader}>Recent Transactions</Text>
-        <Text style={styles.transaction}>You Paid Josh: $14.50</Text>
-      </View>
+      {/* Recent Transactions */}
+      <div className="transactions-card">
+        <h2 className="section-title">Recent Transactions</h2>
+        <div className="transaction-item">
+          <Person className="avatar-icon" />
+          <div className="transaction-details">
+            <span className="transaction-text">You Paid Josh:</span>
+            <span className="transaction-amount" style={{ color: "#41E2BA" }}>$14.50</span>
+          </div>
+        </div>
+        <button className="add-transaction-button" style={{ backgroundColor: "#41E2BA" }}>
+          <Plus className="plus-icon" /> Add Expense
+        </button>
+      </div>
 
-      <View style={styles.section}>
-        <Text style={styles.subHeader}>Groups</Text>
-        <Text style={styles.group}>Dallas Trip</Text>
-        <Text style={styles.group}>Group</Text>
-      </View>
-    </ScrollView>
+      {/* Groups */}
+      <div className="groups-card">
+        <h2 className="section-title">Groups</h2>
+        <div className="group-item">
+          <ElementAvatarsWrapper className="group-avatars">
+            <ElementAvatars />
+          </ElementAvatarsWrapper>
+          <div className="group-details">
+            <span className="group-name">Dallas Trip</span>
+            <span className="group-type">Group</span>
+          </div>
+        </div>
+        <button className="create-group-button" style={{ backgroundColor: "#E86A92" }}>
+          <Plus className="plus-icon" /> Create Group
+        </button>
+      </div>
+
+      {/* Bottom Navigation */}
+      <nav className="bottom-nav">
+        <div className="nav-item active">
+          <Home className="nav-icon" />
+          <span>Home</span>
+        </div>
+        <div className="nav-item">
+          <GmailGroups className="nav-icon" />
+          <span>Groups</span>
+        </div>
+        <div className="nav-item">
+          <Person className="nav-icon" />
+          <span>Profile</span>
+        </div>
+      </nav>
+
+      {/* Status Bar */}
+      <div className="status-bar">
+        <span className="time">9:41</span>
+      </div>
+    </div>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F7F7F9", // Seasalt
-    padding: 20,
-  },
-  header: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "#41E2BA", // Turquoise
-    marginBottom: 20,
-  },
-  section: {
-    marginBottom: 24,
-  },
-  subHeader: {
-    fontSize: 20,
-    fontWeight: "600",
-    marginBottom: 8,
-    color: "#E86A92", // Cyclamen
-  },
-  label: {
-    fontSize: 16,
-    color: "#333",
-  },
-  amountOwe: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#E86A92", // Cyclamen
-  },
-  amountOwed: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#41E2BA", // Turquoise
-  },
-  transaction: {
-    fontSize: 16,
-    color: "#333",
-  },
-  group: {
-    fontSize: 16,
-    backgroundColor: "#F7E733", // Aureolin
-    padding: 10,
-    borderRadius: 8,
-    marginTop: 5,
-    color: "#000",
-  },
-});

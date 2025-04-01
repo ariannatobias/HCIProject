@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-nati
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../constants/Colors";
 
-export const HomePage = () => {
+export const HomeScreen = () => {
   // We'll use the light theme by default
   const theme = Colors.light;
 
@@ -87,22 +87,6 @@ export const HomePage = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="home" size={24} color={theme.tabIconSelected} style={styles.navIcon} />
-          <Text style={[styles.navText, { color: theme.tabIconSelected }]}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="people-outline" size={24} color={theme.tabIconDefault} style={styles.navIcon} />
-          <Text style={[styles.navText, { color: theme.tabIconDefault }]}>Groups</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="person-outline" size={24} color={theme.tabIconDefault} style={styles.navIcon} />
-          <Text style={[styles.navText, { color: theme.tabIconDefault }]}>Profile</Text>
-        </TouchableOpacity>
-      </View>
 
       {/* Status Bar */}
       <View style={styles.statusBar}>
@@ -262,22 +246,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: '500',
   },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-    paddingVertical: 8,
-  },
-  navItem: {
-    alignItems: 'center',
-  },
-  navIcon: {
-    marginBottom: 4,
-  },
-  navText: {
-    fontSize: 12,
-  },
   statusBar: {
     position: 'absolute',
     top: 0,
@@ -291,4 +259,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomePage;
+export default HomeScreen;

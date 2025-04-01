@@ -13,7 +13,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabPre
   return (
     <View style={styles.container}>
       {/* Left navigation items */}
-      <View style={styles.leftNavigation}>
+      <View style={styles.navigationSection}>
         <TouchableOpacity 
           style={styles.navItem} 
           onPress={() => onTabPress('Home')}
@@ -60,7 +60,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabPre
       </View>
       
       {/* Right navigation items */}
-      <View style={styles.rightNavigation}>
+      <View style={styles.navigationSection}>
         <TouchableOpacity 
           style={styles.navItem} 
           onPress={() => onTabPress('Divvy')}
@@ -104,21 +104,18 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.1,
       shadowRadius: 5,
       elevation: 5,
-      paddingHorizontal: 20,
-      paddingTop: 10,
-      paddingBottom: 25,
+      paddingTop: 12,
+      paddingBottom: 20, // Reduced bottom padding
       justifyContent: 'space-between',
-      alignItems: 'flex-end',
+      alignItems: 'center', // Changed from 'flex-end' to 'center'
+      height: 80, // Set a fixed height to ensure consistency
     },
-    leftNavigation: {
+    navigationSection: {
       flexDirection: 'row',
-      width: '30%',
-      justifyContent: 'space-around',
-    },
-    rightNavigation: {
-      flexDirection: 'row',
-      width: '30%',
-      justifyContent: 'space-around',
+      flex: 1,
+      justifyContent: 'space-evenly',
+      height: '100%',
+      alignItems: 'center',
     },
     navItem: {
       alignItems: 'center',
@@ -129,12 +126,10 @@ const styles = StyleSheet.create({
       color: '#687076',
     },
     addButtonContainer: {
-        position: 'absolute',
-        alignItems: 'center',
-        top: -30,
-        left: '50%',
-        transform: [{ translateX: -30 }], 
-      },      
+      alignItems: 'center',
+      marginHorizontal: 5,
+      marginBottom: 10, // Added bottom margin
+    },      
     addButton: {
       backgroundColor: '#41E2BA',
       width: 60,
@@ -147,11 +142,12 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.4,
       shadowRadius: 6,
       elevation: 8,
+      marginTop: -30, // Slightly raises the button above the nav bar
     },
     addButtonText: {
       fontSize: 11,
       textAlign: 'center',
-      marginTop: 6,
+      marginTop: 4, // Reduced top margin
       color: '#41E2BA',
       fontWeight: '500',
     },

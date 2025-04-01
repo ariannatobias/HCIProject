@@ -1,6 +1,8 @@
 {
   "main": "/Users/arianna/Documents/GitHub/HCIProject/Frontend/index.js",
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^7.3.4",
+    "@react-navigation/native": "^7.1.0",
     "expo": "^52.0.42",
     "expo-status-bar": "^2.0.1",
     "lucide-react-native": "^0.486.0",
@@ -8,8 +10,8 @@
     "react-native": "0.76.8"
   },
   "devDependencies": {
-    "@types/react": "~18.3.12",
     "@react-native-community/cli": "latest",
+    "@types/react": "~18.3.12",
     "typescript": "^5.3.3"
   }
 }

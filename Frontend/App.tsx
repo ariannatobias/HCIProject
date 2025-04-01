@@ -1,25 +1,21 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator, BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { View, Text, StyleSheet } from 'react-native';
-import BottomNavigation from './Divvy/components/BottomNavigation'; // Make sure the path is correct
+import BottomNavigation from './Divvy/components/BottomNavigation';
+import HomeScreen from './Divvy/components/HomeScreen'; // Ensure this is the correct path to your HomeScreen component
 
-// Define placeholder screens until you create the real ones
 const PlaceholderScreen = ({ name }: { name: string }) => (
   <View style={styles.screenContainer}>
     <Text style={styles.screenText}>{name} Screen</Text>
   </View>
 );
 
-// Create placeholder screen components
-const HomeScreen = () => <PlaceholderScreen name="Home" />;
 const GroupScreen = () => <PlaceholderScreen name="Group" />;
 const AddExpenseScreen = () => <PlaceholderScreen name="Add Expense" />;
 const DivvyScreen = () => <PlaceholderScreen name="Divvy" />;
 const ProfileScreen = () => <PlaceholderScreen name="Profile" />;
 
-// Define the param list for tab navigator
 type TabParamList = {
   Home: undefined;
   Group: undefined;
@@ -30,13 +26,13 @@ type TabParamList = {
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
-// Create a custom tab bar wrapper component that accepts BottomTabBarProps
 const TabBarWrapper = (props: BottomTabBarProps) => {
   const { state, navigation } = props;
+  console.log('BottomNavigation is:', typeof BottomNavigation);
   return (
     <BottomNavigation
       activeTab={state.routeNames[state.index]}
-      onTabPress={(tabName: string) => {
+      onTabPress={(tabName) => {
         if (state.routeNames.includes(tabName as any)) {
           navigation.navigate(tabName as any);
         }
@@ -49,10 +45,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        id={undefined}
-        tabBar={(props) => <TabBarWrapper {...props} />}
-        screenOptions={{ headerShown: false }}
+        id={undefined} // Include this to satisfy TypeScript
         initialRouteName="Home"
+        screenOptions={{ headerShown: false }}
+        tabBar={(props) => <TabBarWrapper {...props} />}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Group" component={GroupScreen} />

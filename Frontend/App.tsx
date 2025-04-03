@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator, BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { View, Text, StyleSheet } from 'react-native';
 import BottomNavigation from './Divvy/components/BottomNavigation';
 import HomeScreen from './Divvy/components/HomeScreen';
-import LoginScreen from './Divvy/components/LoginScreen'; // Add this import
-import SignUpScreen from './Divvy/components/SignUpScreen'; // Add this import
+import LoginScreen from './Divvy/components/LoginScreen';
+import SignUpScreen from './Divvy/components/SignUpScreen';
+import GroupScreen from './Divvy/components/GroupScreen'; 
+
 
 const PlaceholderScreen = ({ name }: { name: string }) => (
   <View style={styles.screenContainer}>
@@ -13,10 +16,17 @@ const PlaceholderScreen = ({ name }: { name: string }) => (
   </View>
 );
 
-const GroupScreen = () => <PlaceholderScreen name="Group" />;
 const AddExpenseScreen = () => <PlaceholderScreen name="Add Expense" />;
 const DivvyScreen = () => <PlaceholderScreen name="Divvy" />;
 const ProfileScreen = () => <PlaceholderScreen name="Profile" />;
+const GroupsScreen = () => <PlaceholderScreen name="Groups" />;
+
+type RootStackParamList = {
+  MainTabs: undefined;
+  GroupDetail: { groupId: string };
+  Login: undefined;
+  SignUp: undefined;
+};
 
 type TabParamList = {
   Home: undefined;
@@ -29,15 +39,10 @@ type TabParamList = {
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const TabBarWrapper = (props: BottomTabBarProps) => {
   const { state, navigation } = props;
-  console.log('BottomNavigation is:', typeof BottomNavigation);
-  
-  // Only show the tab bar for main screens, not auth screens
-  if (state.routeNames[state.index] === 'Login' || state.routeNames[state.index] === 'SignUp') {
-    return null;
-  }
   
   return (
     <BottomNavigation
@@ -51,37 +56,37 @@ const TabBarWrapper = (props: BottomTabBarProps) => {
   );
 };
 
+const MainTabNavigator = () => {
+  return (
+    <Tab.Navigator
+      id={undefined}
+      initialRouteName="Home"
+      screenOptions={{ headerShown: false }}
+      tabBar={(props) => <TabBarWrapper {...props} />}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Group" component={GroupsScreen} />
+      <Tab.Screen name="AddExpense" component={AddExpenseScreen} />
+      <Tab.Screen name="Divvy" component={DivvyScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
+  );
+};
+
 export default function App() {
-  // For demo purposes, you can toggle this to switch between auth and main screens
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        id={undefined} // Include this to satisfy TypeScript
-        initialRouteName={isLoggedIn ? "Home" : "Login"}
+      <Stack.Navigator
+        id={undefined}
+        initialRouteName={isLoggedIn ? "MainTabs" : "Login"}
         screenOptions={{ headerShown: false }}
-        tabBar={(props) => <TabBarWrapper {...props} />}
       >
-        {/* Auth screens */}
-        <Tab.Screen 
-          name="Login" 
-          component={LoginScreen} 
-          options={{ tabBarButton: () => null }}
-        />
-        <Tab.Screen 
-          name="SignUp" 
-          component={SignUpScreen} 
-          options={{ tabBarButton: () => null }}
-        />
-        
-        {/* Main app screens */}
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Group" component={GroupScreen} />
-        <Tab.Screen name="AddExpense" component={AddExpenseScreen} />
-        <Tab.Screen name="Divvy" component={DivvyScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
-      </Tab.Navigator>
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+        <Stack.Screen name="GroupDetail" component={GroupScreen} />
     </NavigationContainer>
   );
 }

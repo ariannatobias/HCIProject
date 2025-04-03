@@ -333,7 +333,7 @@ const getClusteredPosition = (index: number, total: number): object => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F7F7F9',
   },
   header: {
     paddingHorizontal: 16,

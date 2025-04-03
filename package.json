@@ -1,6 +1,8 @@
 {
   "main": "/Users/arianna/Documents/GitHub/HCIProject/Frontend/index.js",
   "dependencies": {
+    "@react-native-community/datetimepicker": "^8.3.0",
+    "@react-native-picker/picker": "^2.11.0",
     "@react-navigation/bottom-tabs": "^7.3.4",
     "@react-navigation/native": "^7.1.0",
     "@react-navigation/stack": "^7.2.4",

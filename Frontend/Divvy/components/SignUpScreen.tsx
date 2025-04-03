@@ -10,10 +10,14 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
+  Modal,
+  Image,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Assuming you're using Expo
+import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DivvyColors } from '../constants/Colors';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
 
 // Navigation type
 type AuthStackParamList = {
@@ -33,8 +37,114 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  
+  // Date picker states
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [showPickerModal, setShowPickerModal] = useState(false);
+  const [tempDate, setTempDate] = useState(new Date());
+  
+  // Month names for picker
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
+  // Generate years for picker (allow users aged 18-100)
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 100 }, (_, i) => currentYear - 18 - i);
+  
+  // Generate days based on selected month and year
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+  
+  const generateDaysArray = () => {
+    const monthIndex = months.indexOf(months[tempDate.getMonth()]);
+    const year = tempDate.getFullYear();
+    const daysCount = getDaysInMonth(monthIndex, year);
+    return Array.from({ length: daysCount }, (_, i) => i + 1);
+  };
+
+  // Format phone number with dashes
+  const formatPhoneNumber = (input) => {
+    // Remove all non-digit characters
+    const cleaned = input.replace(/\D/g, '');
+    
+    // Format with dashes
+    let formatted = '';
+    if (cleaned.length <= 3) {
+      formatted = cleaned;
+    } else if (cleaned.length <= 6) {
+      formatted = `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
+    } else {
+      formatted = `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+    }
+    
+    return formatted;
+  };
+
+  const handlePhoneNumberChange = (text) => {
+    const formatted = formatPhoneNumber(text);
+    setPhoneNumber(formatted);
+  };
+
+  // Handle date changes
+  const handleDateChange = (event, selectedDate) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+    
+    if (selectedDate) {
+      setDate(selectedDate);
+      const formattedDate = selectedDate.toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+      });
+      setDateOfBirth(formattedDate);
+    }
+  };
+  
+  // Handle wheel picker date confirmation
+  const confirmWheelDate = () => {
+    setDate(tempDate);
+    const formattedDate = tempDate.toLocaleDateString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric'
+    });
+    setDateOfBirth(formattedDate);
+    setShowPickerModal(false);
+  };
 
   const handleSignUp = () => {
+    // Validate inputs before processing
+    if (!firstName || !lastName || !email || !dateOfBirth || !phoneNumber || !password) {
+      alert('Please fill in all fields');
+      return;
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+    
+    // Phone number validation (should be 10 digits after formatting)
+    const cleanedPhone = phoneNumber.replace(/\D/g, '');
+    if (cleanedPhone.length !== 10) {
+      alert('Please enter a valid 10-digit phone number');
+      return;
+    }
+    
+    // Password validation (at least 8 characters)
+    if (password.length < 8) {
+      alert('Password must be at least 8 characters long');
+      return;
+    }
+    
     // Sign up logic would go here
     console.log('Sign up with:', {
       firstName,
@@ -100,29 +210,53 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
               </View>
 
               <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Date of Birth"
-                  value={dateOfBirth}
-                  onChangeText={setDateOfBirth}
-                />
-                <TouchableOpacity style={styles.iconButton}>
-                  <Ionicons name="calendar-outline" size={20} color="#6C757D" />
+                <TouchableOpacity
+                  style={styles.fullWidthTouchable}
+                  onPress={() => {
+                    if (Platform.OS === 'ios') {
+                      setShowPickerModal(true);
+                      setTempDate(date);
+                    } else {
+                      setShowDatePicker(true);
+                    }
+                  }}
+                >
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Date of Birth"
+                    value={dateOfBirth}
+                    editable={false}
+                    pointerEvents="none"
+                  />
+                  <View style={styles.iconButton}>
+                    <Ionicons name="calendar-outline" size={20} color="#6C757D" />
+                  </View>
                 </TouchableOpacity>
               </View>
 
               <View style={styles.inputContainer}>
                 <View style={styles.phoneInputContainer}>
-                  <View style={styles.countrySelector}>
-                    <View style={styles.countryFlag} />
+                  <TouchableOpacity 
+                    style={styles.countrySelector}
+                    onPress={() => {
+                      // For now just show an alert that only US is supported
+                      alert('Currently only supporting United States (+1)');
+                    }}
+                  >
+                    <Image 
+                      source={require('../assets/images/usa-flag.png')} 
+                      style={styles.countryFlag}
+                    />
+                    <Text style={styles.countryCode}>+1</Text>
                     <Ionicons name="chevron-down" size={16} color="#6C757D" />
-                  </View>
+                  </TouchableOpacity>
                   <TextInput
                     style={styles.phoneInput}
                     placeholder="Phone Number"
                     value={phoneNumber}
-                    onChangeText={setPhoneNumber}
+                    onChangeText={handlePhoneNumberChange}
                     keyboardType="phone-pad"
+                    maxLength={12} // 10 digits + 2 dashes
                   />
                 </View>
               </View>
@@ -167,6 +301,88 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Date Picker - Android */}
+      {showDatePicker && Platform.OS === 'android' && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+          maximumDate={new Date(currentYear - 18, 11, 31)}
+          minimumDate={new Date(currentYear - 100, 0, 1)}
+        />
+      )}
+
+      {/* Date Picker Modal - iOS */}
+      <Modal
+        visible={showPickerModal}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.pickerContainer}>
+            <View style={styles.pickerHeader}>
+              <TouchableOpacity onPress={() => setShowPickerModal(false)}>
+                <Text style={styles.cancelButton}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={confirmWheelDate}>
+                <Text style={styles.doneButton}>Done</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.pickerRow}>
+              <View style={styles.pickerColumn}>
+                <Picker
+                  selectedValue={months[tempDate.getMonth()]}
+                  onValueChange={(itemValue) => {
+                    const newDate = new Date(tempDate);
+                    newDate.setMonth(months.indexOf(itemValue));
+                    setTempDate(newDate);
+                  }}
+                  style={styles.picker}
+                >
+                  {months.map((month) => (
+                    <Picker.Item key={month} label={month} value={month} />
+                  ))}
+                </Picker>
+              </View>
+              
+              <View style={styles.pickerColumn}>
+                <Picker
+                  selectedValue={String(tempDate.getDate())}
+                  onValueChange={(itemValue) => {
+                    const newDate = new Date(tempDate);
+                    newDate.setDate(parseInt(itemValue, 10));
+                    setTempDate(newDate);
+                  }}
+                  style={styles.picker}
+                >
+                  {generateDaysArray().map((day) => (
+                    <Picker.Item key={day} label={String(day)} value={String(day)} />
+                  ))}
+                </Picker>
+              </View>
+              
+              <View style={styles.pickerColumn}>
+                <Picker
+                  selectedValue={String(tempDate.getFullYear())}
+                  onValueChange={(itemValue) => {
+                    const newDate = new Date(tempDate);
+                    newDate.setFullYear(parseInt(itemValue, 10));
+                    setTempDate(newDate);
+                  }}
+                  style={styles.picker}
+                >
+                  {years.map((year) => (
+                    <Picker.Item key={year} label={String(year)} value={String(year)} />
+                  ))}
+                </Picker>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -278,10 +494,15 @@ const styles = StyleSheet.create({
   },
   countryFlag: {
     width: 24,
-    height: 24,
-    backgroundColor: DivvyColors.turquoise,
-    borderRadius: 12,
+    height: 16,
     marginRight: 8,
+    borderWidth: 0.5,
+    borderColor: '#E0E0E0',
+  },
+  countryCode: {
+    fontSize: 14,
+    marginRight: 8,
+    color: '#333',
   },
   phoneInput: {
     flex: 1,
@@ -297,6 +518,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 16,
     top: 15,
+  },
+  fullWidthTouchable: {
+    width: '100%',
   },
   registerButton: {
     height: 50,
@@ -321,6 +545,44 @@ const styles = StyleSheet.create({
   loginLink: {
     color: DivvyColors.turquoise,
     fontWeight: '600',
+  },
+  // Modal and Picker styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  pickerContainer: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom: Platform.OS === 'ios' ? 30 : 0,
+  },
+  pickerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  cancelButton: {
+    fontSize: 16,
+    color: '#6C757D',
+  },
+  doneButton: {
+    fontSize: 16,
+    color: DivvyColors.turquoise,
+    fontWeight: '600',
+  },
+  pickerRow: {
+    flexDirection: 'row',
+  },
+  pickerColumn: {
+    flex: 1,
+    height: 200,
+  },
+  picker: {
+    height: 200,
   },
 });
 

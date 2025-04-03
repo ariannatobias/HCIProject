@@ -53,7 +53,7 @@ const TabBarWrapper = (props: BottomTabBarProps) => {
 
 export default function App() {
   // For demo purposes, you can toggle this to switch between auth and main screens
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   
   return (
     <NavigationContainer>

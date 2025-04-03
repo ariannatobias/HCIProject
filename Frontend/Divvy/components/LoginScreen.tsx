@@ -100,8 +100,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         <ScrollView contentContainerStyle={styles.scrollView}>
           <View style={styles.card}>
             <View style={styles.headerContainer}>
-              <Text style={styles.title}>Sign in to your Account</Text>
-              <Text style={styles.subtitle}>Enter your email and password to log in</Text>
+              <Text style={styles.title}>Log In</Text>
+              <Text style={styles.subtitle}>Enter your email and password to log in.</Text>
             </View>
 
             <View style={styles.formContainer}>

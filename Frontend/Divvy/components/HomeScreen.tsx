@@ -1,12 +1,27 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-// Import react-native-svg components instead of Lucide
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../constants/Colors";
+import { useNavigation } from "@react-navigation/native";
+
+// Define the type for navigation
+type RootStackParamList = {
+  MainTabs: undefined;
+  GroupDetail: { groupId: string };
+  Login: undefined;
+  SignUp: undefined;
+};
 
 export const HomeScreen = () => {
   // We'll use the light theme by default
   const theme = Colors.light;
+  // Get the navigation object
+  const navigation = useNavigation<any>();
+
+  // Function to navigate to Group screen
+  const navigateToGroupDetail = (groupId: string) => {
+    navigation.navigate('GroupDetail', { groupId });
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -65,7 +80,12 @@ export const HomeScreen = () => {
         {/* Groups */}
         <View style={[styles.card, { backgroundColor: "white" }]}>
           <Text style={[styles.sectionTitle, { color: theme.text }]}>Groups</Text>
-          <View style={styles.groupItem}>
+          
+          {/* Make this entire group item clickable */}
+          <TouchableOpacity 
+            style={styles.groupItem}
+            onPress={() => navigateToGroupDetail('dallas-trip')}
+          >
             <View style={styles.groupAvatars}>
               {/* Placeholder for group avatars */}
               <View style={styles.avatarsStack}>
@@ -78,7 +98,8 @@ export const HomeScreen = () => {
               <Text style={[styles.groupName, { color: theme.text }]}>Dallas Trip</Text>
               <Text style={[styles.groupType, { color: theme.icon }]}>Group</Text>
             </View>
-          </View>
+          </TouchableOpacity>
+          
           <TouchableOpacity 
             style={[styles.button, { backgroundColor: theme.secondary }]}
           >

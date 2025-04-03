@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
       fontSize: 11,
       textAlign: 'center',
       marginTop: 4, // Reduced top margin
-      color: '#41E2BA',
+      color: '#687076',
       fontWeight: '500',
     },
     icon: {

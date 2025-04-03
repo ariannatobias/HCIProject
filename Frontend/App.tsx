@@ -9,6 +9,7 @@ import LoginScreen from './Divvy/components/LoginScreen';
 import SignUpScreen from './Divvy/components/SignUpScreen';
 import GroupScreen from './Divvy/components/GroupScreen'; 
 
+
 const PlaceholderScreen = ({ name }: { name: string }) => (
   <View style={styles.screenContainer}>
     <Text style={styles.screenText}>{name} Screen</Text>
@@ -33,6 +34,8 @@ type TabParamList = {
   AddExpense: undefined;
   Divvy: undefined;
   Profile: undefined;
+  Login: undefined; // Add this
+  SignUp: undefined; // Add this
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -84,7 +87,6 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="MainTabs" component={MainTabNavigator} />
         <Stack.Screen name="GroupDetail" component={GroupScreen} />
-      </Stack.Navigator>
     </NavigationContainer>
   );
 }

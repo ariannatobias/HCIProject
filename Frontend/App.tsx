@@ -87,6 +87,7 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="MainTabs" component={MainTabNavigator} />
         <Stack.Screen name="GroupDetail" component={GroupScreen} />
+      </Stack.Navigator> 
     </NavigationContainer>
   );
 }

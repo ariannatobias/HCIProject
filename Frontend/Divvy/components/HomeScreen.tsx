@@ -88,9 +88,6 @@ export const HomeScreen = () => {
         </View>
       </ScrollView>
       {/* Status Bar */}
-      <View style={styles.statusBar}>
-        <Text style={[styles.time, { color: theme.icon }]}>9:41</Text>
-      </View>
     </View>
   );
 };
@@ -103,7 +100,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    marginTop: 20, // Add extra margin for status bar
+    marginTop: 60, // Add extra margin for status bar
   },
   logoContainer: {
     marginRight: 10,
@@ -252,9 +249,6 @@ const styles = StyleSheet.create({
     right: 0,
     paddingHorizontal: 16,
     paddingTop: 4,
-  },
-  time: {
-    fontSize: 12,
   },
 });
 

@@ -7,7 +7,9 @@ import BottomNavigation from './Divvy/components/BottomNavigation';
 import HomeScreen from './Divvy/components/HomeScreen';
 import LoginScreen from './Divvy/components/LoginScreen';
 import SignUpScreen from './Divvy/components/SignUpScreen';
-import GroupScreen from './Divvy/components/GroupScreen'; 
+import GroupScreen from './Divvy/components/GroupScreen';
+import SettleDebtsScreen from './Divvy/components/SettleDebtsScreen';
+import AddExpenseScreen from './Divvy/components/AddExpenseScreen';
 
 
 const PlaceholderScreen = ({ name }: { name: string }) => (
@@ -16,7 +18,6 @@ const PlaceholderScreen = ({ name }: { name: string }) => (
   </View>
 );
 
-const AddExpenseScreen = () => <PlaceholderScreen name="Add Expense" />;
 const DivvyScreen = () => <PlaceholderScreen name="Divvy" />;
 const ProfileScreen = () => <PlaceholderScreen name="Profile" />;
 const GroupsScreen = () => <PlaceholderScreen name="Groups" />;
@@ -24,6 +25,8 @@ const GroupsScreen = () => <PlaceholderScreen name="Groups" />;
 type RootStackParamList = {
   MainTabs: undefined;
   GroupDetail: { groupId: string };
+  SettleDebts: { groupId: string, groupName: string };
+  AddExpense: undefined;
   Login: undefined;
   SignUp: undefined;
 };
@@ -34,8 +37,6 @@ type TabParamList = {
   AddExpense: undefined;
   Divvy: undefined;
   Profile: undefined;
-  Login: undefined; // Add this
-  SignUp: undefined; // Add this
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -65,7 +66,7 @@ const MainTabNavigator = () => {
       tabBar={(props) => <TabBarWrapper {...props} />}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Group" component={GroupsScreen} />
+      <Tab.Screen name="Group" component={GroupScreen} />
       <Tab.Screen name="AddExpense" component={AddExpenseScreen} />
       <Tab.Screen name="Divvy" component={DivvyScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
@@ -87,6 +88,8 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="MainTabs" component={MainTabNavigator} />
         <Stack.Screen name="GroupDetail" component={GroupScreen} />
+        <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
+        <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
       </Stack.Navigator> 
     </NavigationContainer>
   );

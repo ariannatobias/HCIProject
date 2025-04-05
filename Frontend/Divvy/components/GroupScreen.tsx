@@ -15,21 +15,19 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DivvyColors } from '../constants/Colors';
 
-// Define the param list for the root stack
 type RootStackParamList = {
   MainTabs: undefined;
   GroupDetail: { groupId: string };
   Login: undefined;
   SignUp: undefined;
+  SettleDebts: { groupId: string; groupName: string };
 };
 
-// Define the props for the GroupScreen component
 type GroupScreenProps = {
   route: RouteProp<RootStackParamList, 'GroupDetail'>;
   navigation: StackNavigationProp<RootStackParamList, 'GroupDetail'>;
 };
 
-// Define types for our data
 type Member = {
   id: number;
   name: string;
@@ -55,10 +53,8 @@ type Transaction = {
 };
 
 const GroupScreen: React.FC<GroupScreenProps> = ({ route, navigation }) => {
-  // Get the groupId from route params
-  const { groupId } = route.params;
-  
-  // Sample data for the group and transactions
+  const groupId = route?.params?.groupId ?? 'default';
+
   const groupData = {
     id: groupId,
     name: 'Dallas Trip Group',
@@ -81,9 +77,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route, navigation }) => {
       amount: 56.12,
       date: '07/02/2025',
       time: '19:23',
-      splits: [
-        { name: 'You', amount: 12.12, owes: true }
-      ]
+      splits: [{ name: 'You', amount: 12.12, owes: true }],
     },
     {
       id: 2,
@@ -93,52 +87,47 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route, navigation }) => {
       amount: 35.09,
       date: '07/02/2025',
       time: '20:50',
-      splits: [
-        { name: 'You', amount: 7.27, owes: true }
-      ]
+      splits: [{ name: 'You', amount: 7.27, owes: true }],
     },
     {
       id: 3,
       paidBy: 'You',
       category: 'Games',
       description: 'Arcade Night',
-      amount: 42.00,
+      amount: 42.0,
       date: '07/02/2025',
       time: '21:00',
       splits: [
-        { name: 'Josh', amount: 21.00, owes: false },
-        { name: 'Arianna', amount: 21.00, owes: false }
-      ]
-    }
+        { name: 'Josh', amount: 21.0, owes: false },
+        { name: 'Arianna', amount: 21.0, owes: false },
+      ],
+    },
   ];
 
-  // Add more mock transactions to demonstrate scrolling
   const additionalTransactions: Transaction[] = [
     {
       id: 4,
       paidBy: 'Mitchell',
       category: 'Tickets',
       description: 'Museum Passes',
-      amount: 89.50,
+      amount: 89.5,
       date: '07/03/2025',
       time: '10:15',
-      splits: [
-        { name: 'You', amount: 17.90, owes: true }
-      ]
+      splits: [{ name: 'You', amount: 17.9, owes: true }],
     },
     {
       id: 5,
       paidBy: 'You',
       category: 'Drinks',
       description: 'Rooftop Bar',
-      amount: 64.80,
+      amount: 64.8,
       date: '07/03/2025',
       time: '21:45',
       splits: [
-        { name: 'Josh', amount: 16.20, owes: false },
-        { name: 'Mitchell', amount: 16.20, owes: false },
-        { name: 'Nthati', amount: 16.20, owes: false }
-      ]
+        { name: 'Josh', amount: 16.2, owes: false },
+        { name: 'Mitchell', amount: 16.2, owes: false },
+        { name: 'Nthati', amount: 16.2, owes: false },
+      ],
     },
     {
       id: 6,
@@ -148,9 +137,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route, navigation }) => {
       amount: 28.75,
       date: '07/04/2025',
       time: '13:20',
-      splits: [
-        { name: 'You', amount: 5.75, owes: true }
-      ]
+      splits: [{ name: 'You', amount: 5.75, owes: true }],
     },
     {
       id: 7,
@@ -160,91 +147,108 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route, navigation }) => {
       amount: 47.36,
       date: '07/04/2025',
       time: '16:30',
-      splits: [
-        { name: 'Arianna', amount: 23.68, owes: false }
-      ]
-    }
+      splits: [{ name: 'Arianna', amount: 23.68, owes: false }],
+    },
   ];
-  
-  // Combine all transactions
+
   const allTransactions = [...transactions, ...additionalTransactions];
 
-  // Helper function to get member by name
   const getMemberByName = (name: string): Member => {
     if (name === 'You') return groupData.currentUser;
     const member = groupData.members.find(member => member.name === name);
-    return member || groupData.currentUser; // Fallback to current user if not found
+    return member || groupData.currentUser;
+  };
+
+  // Added functions below
+  const calculateTotalDebts = (transactions: Transaction[], currentUserName: string = 'You'): number => {
+    let totalOwed = 0;
+
+    transactions.forEach(transaction => {
+      if (transaction.paidBy !== currentUserName) {
+        transaction.splits.forEach(split => {
+          if (split.name === currentUserName && split.owes) {
+            totalOwed += split.amount;
+          }
+        });
+      } else {
+        transaction.splits.forEach(split => {
+          if (split.name !== currentUserName && !split.owes) {
+            totalOwed -= split.amount;
+          }
+        });
+      }
+    });
+
+    return totalOwed;
+  };
+
+  const handleSettleDebts = () => {
+    navigation.navigate('SettleDebts', {
+      groupId: groupData.id,
+      groupName: groupData.name,
+    });
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      
-      {/* Updated Header - Simplified */}
       <View style={styles.header}>
         <View style={styles.searchContainer}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="#000000" />
           </TouchableOpacity>
-          
+
           <View style={styles.searchBar}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search"
-              placeholderTextColor="#888"
-            />
+            <TextInput style={styles.searchInput} placeholder="Search" placeholderTextColor="#888" />
             <TouchableOpacity style={styles.searchIconContainer}>
               <Ionicons name="close" size={16} color="#888" />
             </TouchableOpacity>
           </View>
-          
+
           <TouchableOpacity style={styles.profileButton}>
-            <Image
-              source={groupData.currentUser.avatar}
-              style={styles.profileImage}
-            />
+            <Image source={groupData.currentUser.avatar} style={styles.profileImage} />
           </TouchableOpacity>
         </View>
       </View>
-      
-      {/* Group Title */}
+
       <View style={styles.groupTitleContainer}>
         <Text style={styles.groupTitle}>{groupData.name}</Text>
       </View>
-      
-      {/* Group Members - Updated for clustered layout */}
+
       <View style={styles.groupMembersContainer}>
         <View style={styles.membersClusterLayout}>
           {groupData.members.map((member, index) => (
-            <View 
-              key={member.id} 
-              style={[
-                styles.memberCircleContainer,
-                getClusteredPosition(index, groupData.members.length)
-              ]}
-            >
+            <View key={member.id} style={[styles.memberCircleContainer, getClusteredPosition(index, groupData.members.length)]}>
               <View style={[styles.memberCircle, { backgroundColor: member.color }]}>
                 <Image source={member.avatar} style={styles.memberImage} />
               </View>
             </View>
           ))}
         </View>
-        
         <TouchableOpacity style={styles.editButton}>
           <Ionicons name="pencil" size={18} color="#000" />
         </TouchableOpacity>
       </View>
-      
-      {/* Transactions Header */}
+
       <View style={styles.transactionsHeaderContainer}>
         <Text style={styles.transactionsHeader}>Transactions</Text>
       </View>
-      
-      {/* Transactions List */}
+
+      {/* Settle Debts Button */}
+      <View style={styles.settleDebtsContainer}>
+        <TouchableOpacity style={styles.settleDebtsButton} onPress={handleSettleDebts}>
+          <Text style={styles.settleDebtsButtonText}>Settle Debts</Text>
+          <View style={styles.amountBadge}>
+            <Text style={styles.amountBadgeText}>
+              ${Math.abs(calculateTotalDebts(allTransactions)).toFixed(2)}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView style={styles.transactionsList}>
         {allTransactions.map(transaction => {
           const payer = getMemberByName(transaction.paidBy);
-          
           return (
             <View key={transaction.id} style={styles.transactionCard}>
               <View style={styles.transactionHeader}>
@@ -260,34 +264,24 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route, navigation }) => {
                   <Text style={styles.transactionAmount}>${transaction.amount.toFixed(2)}</Text>
                 </View>
               </View>
-              
+
               <View style={styles.transactionDetails}>
                 <View style={styles.transactionDateContainer}>
                   <Text style={styles.transactionPayerText}>
                     {transaction.paidBy === 'You' ? 'You' : transaction.paidBy} paid for
                   </Text>
-                  <Text style={styles.transactionDescription}>
-                    {transaction.description}
-                  </Text>
-                  <Text style={styles.transactionDate}>
-                    {transaction.date}
-                  </Text>
-                  <Text style={styles.transactionTime}>
-                    {transaction.time}
-                  </Text>
+                  <Text style={styles.transactionDescription}>{transaction.description}</Text>
+                  <Text style={styles.transactionDate}>{transaction.date}</Text>
+                  <Text style={styles.transactionTime}>{transaction.time}</Text>
                 </View>
-                
+
                 <View style={styles.transactionSplitsContainer}>
                   {transaction.splits.map((split, index) => (
                     <View key={index} style={styles.splitRow}>
                       <Text style={styles.splitText}>
-                        {split.owes 
-                          ? `You owe ${transaction.paidBy}`
-                          : `${split.name} owes you`}
+                        {split.owes ? `You owe ${transaction.paidBy}` : `${split.name} owes you`}
                       </Text>
-                      <Text style={styles.splitAmount}>
-                        ${split.amount.toFixed(2)}
-                      </Text>
+                      <Text style={styles.splitAmount}>${split.amount.toFixed(2)}</Text>
                     </View>
                   ))}
                 </View>
@@ -300,33 +294,29 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route, navigation }) => {
   );
 };
 
-// New function for clustered layout
 const getClusteredPosition = (index: number, total: number): object => {
-  // For 5 members, create a tighter cluster layout
   if (total === 5) {
     switch (index) {
-      case 0: return { top: 10, left: '40%' }; // Top center
-      case 1: return { top: 20, left: '15%' }; // Left
-      case 2: return { top: 55, left: '25%' }; // Bottom left
-      case 3: return { top: 55, right: '25%' }; // Bottom right
-      case 4: return { top: 20, right: '15%' }; // Right
+      case 0: return { top: 10, left: '40%' };
+      case 1: return { top: 20, left: '15%' };
+      case 2: return { top: 55, left: '25%' };
+      case 3: return { top: 55, right: '25%' };
+      case 4: return { top: 20, right: '15%' };
       default: return {};
     }
   }
-  
-  // For other numbers of members, calculate a tighter circle
-  const radius = 45; // Reduced radius for tighter clustering
-  const centerX = 80; // Center X coordinate
-  const centerY = 45; // Center Y coordinate
-  
+
+  const radius = 45;
+  const centerX = 80;
+  const centerY = 45;
   const angle = (index / total) * 2 * Math.PI;
   const x = centerX + radius * Math.cos(angle);
   const y = centerY + radius * Math.sin(angle);
-  
+
   return {
     position: 'absolute',
-    left: x - 20, // Adjusted for smaller avatar size and tighter grouping
-    top: y - 20, // Adjusted for smaller avatar size and tighter grouping
+    left: x - 20,
+    top: y - 20,
   };
 };
 
@@ -383,28 +373,28 @@ const styles = StyleSheet.create({
   },
   groupMembersContainer: {
     alignItems: 'center',
-    marginBottom: 16, // Reduced margin for tighter layout
+    marginBottom: 16,
     position: 'relative',
   },
   membersClusterLayout: {
-    width: 160, // Decreased width for tighter cluster
-    height: 100, // Decreased height for tighter cluster
+    width: 160,
+    height: 100,
     position: 'relative',
   },
   memberCircleContainer: {
     position: 'absolute',
-    width: 40, // Slightly smaller avatar size
-    height: 40, // Slightly smaller avatar size
+    width: 40,
+    height: 40,
   },
   memberCircle: {
-    width: 40, // Slightly smaller avatar size
-    height: 40, // Slightly smaller avatar size
-    borderRadius: 20, // Adjusted for new size
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    borderWidth: 2, // Added border
-    borderColor: 'white', // White border for better separation
+    borderWidth: 2,
+    borderColor: 'white',
   },
   memberImage: {
     width: '100%',
@@ -428,6 +418,33 @@ const styles = StyleSheet.create({
   },
   transactionsHeader: {
     fontSize: 20,
+    fontWeight: 'bold',
+  },
+  settleDebtsContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 16,
+  },
+  settleDebtsButton: {
+    backgroundColor: '#41E2BA',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 12,
+  },
+  settleDebtsButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  amountBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  amountBadgeText: {
+    color: 'white',
     fontWeight: 'bold',
   },
   transactionsList: {

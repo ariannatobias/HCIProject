@@ -11,16 +11,13 @@ import GroupScreen from './Divvy/components/GroupScreen';
 import SettleDebtsScreen from './Divvy/components/SettleDebtsScreen';
 import AddExpenseScreen from './Divvy/components/AddExpenseScreen';
 
-
 const PlaceholderScreen = ({ name }: { name: string }) => (
   <View style={styles.screenContainer}>
     <Text style={styles.screenText}>{name} Screen</Text>
   </View>
 );
 
-const DivvyScreen = () => <PlaceholderScreen name="Divvy" />;
 const ProfileScreen = () => <PlaceholderScreen name="Profile" />;
-const GroupsScreen = () => <PlaceholderScreen name="Groups" />;
 
 type RootStackParamList = {
   MainTabs: undefined;
@@ -68,7 +65,7 @@ const MainTabNavigator = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Group" component={GroupScreen} />
       <Tab.Screen name="AddExpense" component={AddExpenseScreen} />
-      <Tab.Screen name="Divvy" component={DivvyScreen} />
+      <Tab.Screen name="Divvy" component={SettleDebtsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

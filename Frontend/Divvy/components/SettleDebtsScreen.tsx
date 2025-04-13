@@ -14,66 +14,53 @@ import { useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 
-// Define the param list for the root stack (matching your GroupScreen)
 type RootStackParamList = {
   MainTabs: undefined;
   GroupDetail: { groupId: string };
-  SettleDebts: { groupId: string, groupName: string };
+  SettleDebts: { groupId?: string, groupName?: string };
   Login: undefined;
   SignUp: undefined;
 };
 
-// Define the props for the SettleDebtsScreen component
 type SettleDebtsScreenProps = {
-  route: RouteProp<RootStackParamList, 'SettleDebts'>;
+  route?: RouteProp<RootStackParamList, 'SettleDebts'>;
   navigation: StackNavigationProp<RootStackParamList, 'SettleDebts'>;
 };
 
 const SettleDebtsScreen: React.FC<SettleDebtsScreenProps> = ({ route, navigation }) => {
-  // Get the groupId and groupName from route params
-  const { groupId, groupName } = route.params;
-  const [selectedGroup, setSelectedGroup] = useState(groupName || 'Dallas Trip Group');
+  const groupId = route?.params?.groupId || 'default-group-id';
+  const groupName = route?.params?.groupName || 'Default Group';
+  const [selectedGroup, setSelectedGroup] = useState(groupName);
   
-  // Mock data for the debts - this would come from your API/state management in a real app
-  // In a real implementation, you would fetch this data based on the groupId
   const debts = [
     { name: 'Josh', amount: 12.12, avatar: require('../assets/avatars/josh.png'), color: '#FFD700' },
     { name: 'Arianna', amount: 7.27, avatar: require('../assets/avatars/arianna.png'), color: '#FFDAB9' },
     { name: 'Mitchell', amount: 10.00, avatar: require('../assets/avatars/mitchell.png'), color: '#FFA07A' },
   ];
   
-  // Calculate total amount due
   const totalAmount = debts.reduce((sum, debt) => sum + debt.amount, 0);
   
-  // Handle back button press
   const handleBackPress = () => {
-    navigation.navigate('GroupDetail', { groupId });
+    if (route?.params?.groupId) {
+      navigation.navigate('GroupDetail', { groupId });
+    } else {
+      navigation.goBack();
+    }
   };
   
-  // Handle group selection
   const handleGroupSelect = () => {
-    // This would open a dropdown or navigate to group selection
     console.log('Open group selection');
   };
   
-  // Handle divvy up button press - this would allocate/optimize payments
   const handleDivvyUp = () => {
     console.log('Divvy up pressed');
-    // This would trigger the smart allocation logic to minimize transactions
-    // In a real app, this might navigate to a payment confirmation screen
-    // or show an optimized payment plan modal
-    
-    // For demo purposes, we could show a success message or navigate to another screen
     alert('Debts optimized! Ready for settlement.');
   };
   
-  // Handle individual pay button press
   const handlePay = (name, amount) => {
     console.log(`Pay ${amount} to ${name}`);
-    // This would integrate with payment methods or mark as paid in your app
   };
 
-  // Get current time for status bar
   const getCurrentTime = () => {
     const date = new Date();
     let hours = date.getHours();
@@ -88,7 +75,7 @@ const SettleDebtsScreen: React.FC<SettleDebtsScreenProps> = ({ route, navigation
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Status Bar - Mimicking the design from paste.txt */}
+      {/* Status Bar */}
       {Platform.OS === 'web' && (
         <View style={styles.statusBar}>
           <Text style={styles.time}>{getCurrentTime()}</Text>
@@ -144,7 +131,7 @@ const SettleDebtsScreen: React.FC<SettleDebtsScreenProps> = ({ route, navigation
             <Text style={styles.breakdownTitle}>Breakdown of Debts</Text>
             
             <ScrollView>
-                              {debts.map((debt, index) => (
+              {debts.map((debt, index) => (
                 <View key={index} style={styles.debtItem}>
                   <View style={styles.debtNameContainer}>
                     <View style={[styles.debtAvatar, { backgroundColor: debt.color }]}>
@@ -172,7 +159,7 @@ const SettleDebtsScreen: React.FC<SettleDebtsScreenProps> = ({ route, navigation
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F7F7F9', // Matching the background color from GroupScreen
+    backgroundColor: '#F7F7F9', 
   },
   statusBar: {
     display: 'flex',
@@ -212,7 +199,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    maxWidth: 420, // From paste.txt auth-page max-width
+    maxWidth: 420, 
     alignSelf: 'center',
     width: '100%',
   },
@@ -245,7 +232,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#e0e0e0', // Placeholder color
+    backgroundColor: '#e0e0e0', 
   },
   contentCard: {
     backgroundColor: 'white',
@@ -267,9 +254,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    borderRadius: 8, // Matching the auth-input border-radius
+    borderRadius: 8, 
     padding: 15,
-    height: 50, // Matching the auth-input height
+    height: 50, 
   },
   dropdownText: {
     fontSize: 16,
@@ -285,24 +272,24 @@ const styles = StyleSheet.create({
   amountLabel: {
     fontSize: 20,
     marginBottom: 5,
-    color: '#6c757d', // From auth-subtitle color
+    color: '#6c757d', 
   },
   amountValue: {
     fontSize: 48,
     fontWeight: 'bold',
   },
   divvyButton: {
-    backgroundColor: '#41E2BA', // Using the primary color from paste.txt
-    borderRadius: 8, // Matching auth-button border-radius
+    backgroundColor: '#41E2BA', 
+    borderRadius: 8,
     padding: 15,
     alignItems: 'center',
     marginBottom: 30,
-    height: 50, // Matching auth-button height
+    height: 50, 
   },
   divvyButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600', // Matching auth-button font-weight
+    fontWeight: '600',
   },
   breakdownContainer: {
     flex: 1,
@@ -348,14 +335,14 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   payButton: {
-    backgroundColor: '#41E2BA', // Using the primary color from paste.txt
-    borderRadius: 8, // Matching auth-button border-radius
+    backgroundColor: '#41E2BA',
+    borderRadius: 8,
     paddingHorizontal: 20,
     paddingVertical: 8,
   },
   payButtonText: {
     color: 'white',
-    fontWeight: '600', // Matching auth-button font-weight
+    fontWeight: '600',
   },
 });
 

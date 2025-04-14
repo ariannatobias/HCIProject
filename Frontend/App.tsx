@@ -11,6 +11,8 @@ import GroupScreen from './Divvy/components/GroupScreen';
 import SettleDebtsScreen from './Divvy/components/SettleDebtsScreen';
 import ProfileScreen from './Divvy/components/ProfileScreen';
 import AddExpenseScreen from './Divvy/components/AddExpenseScreen';
+import groupMemberScreen from './Divvy/components/groupMemberScreen';
+import { GroupProvider } from './Divvy/context/GroupContext';
 
 const PlaceholderScreen = ({ name }: { name: string }) => (
   <View style={styles.screenContainer}>
@@ -20,13 +22,15 @@ const PlaceholderScreen = ({ name }: { name: string }) => (
 
 // const ProfileScreen = () => <PlaceholderScreen name="Profile" />;
 
-type RootStackParamList = {
+export type RootStackParamList = {
   MainTabs: undefined;
   GroupDetail: { groupId: string };
-  SettleDebts: { groupId: string, groupName: string };
+  SettleDebts: { groupId: string; groupName: string };
+  groupMemberScreen: { groupName?: string };
   AddExpense: undefined;
   Login: undefined;
   SignUp: undefined;
+  GroupMember: undefined;
 };
 
 type TabParamList = {
@@ -76,20 +80,25 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        id={undefined}
-        initialRouteName={isLoggedIn ? "MainTabs" : "Login"}
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="MainTabs" component={MainTabNavigator} />
-        <Stack.Screen name="GroupDetail" component={GroupScreen} />
-        <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
-        <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
-      </Stack.Navigator> 
-    </NavigationContainer>
+    <GroupProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          id={undefined}
+          initialRouteName={isLoggedIn ? "MainTabs" : "Login"}
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
+          <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+          <Stack.Screen name="GroupDetail" component={GroupScreen} />
+          <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
+          <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
+          <Stack.Screen name="groupMemberScreen" component={groupMemberScreen} />
+
+
+        </Stack.Navigator> 
+      </NavigationContainer>
+      </GroupProvider>
   );
 }
 

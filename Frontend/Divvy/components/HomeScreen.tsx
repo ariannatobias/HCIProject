@@ -305,6 +305,8 @@ export const HomeScreen = () => {
   const theme = Colors.light;
   const navigation = useNavigation<any>();
   const { groups } = useGroups(); // ✅ Correct placement of hook
+  console.log("🔍 Current Groups:", groups);
+
 
   const navigateToGroupDetail = (groupId: string) => {
     navigation.navigate("GroupDetail", { groupId });
@@ -355,7 +357,7 @@ export const HomeScreen = () => {
 
           <TouchableOpacity
             style={[styles.button, { backgroundColor: theme.secondary }]}
-            onPress={() => navigation.navigate("GroupMember", { groupName: "New Group" })}
+            onPress={() => navigation.navigate("groupMemberScreen", { groupName: "New Group" })}
           >
             <Ionicons name="add-circle-outline" size={16} color="white" style={styles.buttonIcon} />
             <Text style={[styles.buttonText, { color: "white" }]}>Create Group</Text>

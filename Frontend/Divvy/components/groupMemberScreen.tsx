@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -34,22 +34,45 @@ type Member = {
 };
 
 const GroupMemberScreen: React.FC<GroupMemberScreenProps> = ({ route, navigation }) => {
-  const [availableUsers, setAvailableUsers] = useState<Member[]>([
-    { id: 1, name: 'Arianna', avatar: require('../assets/avatars/arianna.png'), color: '#FFDAB9' },
-    { id: 2, name: 'Blaine', avatar: require('../assets/avatars/blaine.png'), color: '#87CEEB' },
-    { id: 3, name: 'Josh', avatar: require('../assets/avatars/josh.png'), color: '#FFD700' },
-    { id: 4, name: 'Nthati', avatar: require('../assets/avatars/nthati.png'), color: '#98FB98' },
-    { id: 5, name: 'Mitchell', avatar: require('../assets/avatars/mitchell.png'), color: '#FFA07A' },
-  ]);
+    const [availableUsers, setAvailableUsers] = useState<Member[]>([]);
+    const [groupMembers, setGroupMembers] = useState<Member[]>([]);
+    const [groupName, setGroupName] = useState(route.params?.groupName || 'New Group');
+  
 
   const { addGroup } = useGroups();
 
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/users/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error fetching users: ${response.status}`);
+        }
+  
+        const users = await response.json();
+  
+        const formattedUsers = users.map((user: any) => ({
+          id: user.id,
+          name: `${user.first_name} ${user.last_name}`,
+          color: '#EEE', // Optional: Generate or rotate colors
+        }));
+  
+        setAvailableUsers(formattedUsers);
+      } catch (err) {
+        console.error('Failed to load users:', err);
+      }
+    };
+  
+    loadUsers();
+  }, []);
+  
 
-  const [groupMembers, setGroupMembers] = useState<Member[]>([
-    { id: 6, name: 'You', avatar: require('../assets/avatars/blaine.png'), color: '#87CEEB' },
-  ]);
-
-  const [groupName, setGroupName] = useState(route.params?.groupName || 'New Group');
 
   const handleAddMember = (member: Member) => {
     setAvailableUsers(availableUsers.filter(user => user.id !== member.id));

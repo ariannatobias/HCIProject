@@ -74,10 +74,14 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
         logger.warning(f"User not found - ID: {user_id}")
     return user
 
-# @router.post("/login", response_model=UserResponse)
-# def login(user: UserLogin, db: Session = Depends(get_db)):
-#     db_user = db.query(User).filter(User.email == user.email).first()
-#     if not db_user or db_user.password != user.password:
-#         raise HTTPException(status_code=401, detail="Invalid email or password")
-#     return db_user
-# # Add similar logging to other endpoints...
+@router.post("/login", response_model=UserResponse)
+def login(user: UserLogin, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.email == user.email).first()
+    if not db_user or db_user.password != user.password:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    return db_user
+# Add similar logging to other endpoints...
+
+@router.get("/", response_model=list[UserResponse])
+def get_all_users(db: Session = Depends(get_db)):
+    return user_crud.get_all_users(db)

@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { DivvyColors } from '../constants/Colors';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { LoginScreenNavigationProp } from '../types/navigation';
 
 // Navigation type
 type AuthStackParamList = {
@@ -21,8 +23,15 @@ type AuthStackParamList = {
   SignUp: undefined;
 };
 
+
+// type LoginScreenProps = {
+//   navigation: StackNavigationProp<RootStackParamList, 'Login'>;
+//   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+// };
+
 type LoginScreenProps = {
-  navigation: any; // Using 'any' to avoid stack navigator dependency
+  navigation: LoginScreenNavigationProp;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {

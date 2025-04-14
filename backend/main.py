@@ -13,6 +13,8 @@ import os
 
 from core.database import Base, engine
 from models import users as user_model  # Ensure this import initializes the models
+# from models import group  # 👈 This must be BEFORE create_all
+
 
 # Create database tables (runs once at startup)
 print("🚀 Using DB:", engine.url)
@@ -41,3 +43,4 @@ app.add_middleware(
 # Include the user routes
 app.include_router(users.router)
 app.include_router(login.router)
+app.include_router(group.router)

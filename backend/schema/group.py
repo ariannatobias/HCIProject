@@ -7,9 +7,18 @@ class GroupBase(BaseModel):
 class GroupCreate(GroupBase):
     member_ids: List[int]  # List of user IDs to add to group
 
-class GroupOut(GroupBase):
+class GroupOut(BaseModel):
     id: int
+    name: str
     member_ids: List[int]
 
+    @classmethod
+    def from_orm(cls, obj):
+        return cls(
+            id=obj.id,
+            name=obj.name,
+            member_ids=[user.id for user in obj.members]
+        )
+
     class Config:
-        orm_mode = True
+        from_attributes = True

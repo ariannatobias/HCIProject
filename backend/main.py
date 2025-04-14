@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from api import users  # This assumes your api/users.py file is structured as a module
+
+from api import users, login, group # This assumes your api/users.py file is structured as a module
 from fastapi.middleware.cors import CORSMiddleware
 
 import sys
@@ -39,3 +40,4 @@ app.add_middleware(
 
 # Include the user routes
 app.include_router(users.router)
+app.include_router(login.router)

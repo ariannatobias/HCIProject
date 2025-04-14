@@ -7,6 +7,7 @@ export type RootStackParamList = {
   AddExpense: undefined;
   Login: undefined;
   SignUp: undefined;
+  GroupMember: undefined;
 };
 
 // Helper type for screen components

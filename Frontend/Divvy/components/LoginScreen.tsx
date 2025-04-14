@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   View,
   Text,
@@ -16,6 +17,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { DivvyColors } from '../constants/Colors';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LoginScreenNavigationProp } from '../types/navigation';
+import axios from 'axios';
+
 
 // Navigation type
 type AuthStackParamList = {
@@ -34,7 +37,8 @@ type LoginScreenProps = {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, setIsLoggedIn }) => {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -54,44 +58,78 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     return emailRegex.test(email);
   };
 
-  const handleLogin = () => {
-    // Reset previous errors
+  const handleLogin = async () => {
     setPasswordError('');
-
-    // Basic form validation
-    if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email');
+  
+    if (!email.trim() || !validateEmail(email)) {
+      Alert.alert('Error', 'Please enter a valid email');
       return;
     }
-
-    if (!validateEmail(email)) {
-      Alert.alert('Error', 'Please enter a valid email address');
-      return;
-    }
-
     if (!password) {
       Alert.alert('Error', 'Please enter your password');
       return;
     }
-
-    // Simulate API call
+  
     setIsLoading(true);
-    
-    // Simulate network delay
-    setTimeout(() => {
-      // Check if credentials match (in a real app this would be an API call)
-      if (email === mockCredentials.email && password === mockCredentials.password) {
-        console.log('Login successful with:', { email, password, rememberMe });
-        setIsLoading(false);
-        // Navigate to Home screen or dashboard
-        // navigation.navigate('Home');
-      } else {
-        console.log('Login failed');
-        setPasswordError('Incorrect email or password. Please try again.');
-        setIsLoading(false);
-      }
-    }, 1000);
+    const payload = { email, password };
+  
+    try {
+      const response = await axios.post('http://localhost:8000/login/', payload);
+      console.log('✅ Login response:', response.data);
+  
+      setIsLoggedIn(true);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MainTabs' as never }],
+      });
+    } catch (error: any) {
+      const message = error.response?.data?.detail || 'Login failed';
+      console.error('❌ Login error:', message);
+      setPasswordError(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
+  
+  
+  // const handleLogin = () => {
+  //   // Reset previous errors
+  //   setPasswordError('');
+
+  //   // Basic form validation
+  //   if (!email.trim()) {
+  //     Alert.alert('Error', 'Please enter your email');
+  //     return;
+  //   }
+
+  //   if (!validateEmail(email)) {
+  //     Alert.alert('Error', 'Please enter a valid email address');
+  //     return;
+  //   }
+
+  //   if (!password) {
+  //     Alert.alert('Error', 'Please enter your password');
+  //     return;
+  //   }
+
+  //   // Simulate API call
+  //   setIsLoading(true);
+    
+  //   // Simulate network delay
+  //   setTimeout(() => {
+  //     // Check if credentials match (in a real app this would be an API call)
+  //     if (email === mockCredentials.email && password === mockCredentials.password) {
+  //       console.log('Login successful with:', { email, password, rememberMe });
+  //       setIsLoading(false);
+  //       // Navigate to Home screen or dashboard
+  //       // navigation.navigate('Home');
+  //     } else {
+  //       console.log('Login failed');
+  //       setPasswordError('Incorrect email or password. Please try again.');
+  //       setIsLoading(false);
+  //     }
+  //   }, 1000);
+  // };
 
   const handleGoogleLogin = () => {
     // Google login logic would go here

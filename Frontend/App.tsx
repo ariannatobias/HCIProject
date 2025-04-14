@@ -112,7 +112,8 @@ import { createBottomTabNavigator, BottomTabBarProps } from '@react-navigation/b
 import { createStackNavigator } from '@react-navigation/stack';
 import { View, Text, StyleSheet } from 'react-native';
 // At the top of App.tsx
-import { RootStackParamList} from './Divvy/types/navigation'
+import { RootStackParamList} from './Divvy/types/navigation';
+import { GroupProvider } from './Divvy/context/GroupContext';
 
 // Remove the local RootStackParamList definition from App.tsx
 
@@ -123,6 +124,9 @@ import SignUpScreen from './Divvy/components/SignUpScreen';
 import GroupScreen from './Divvy/components/GroupScreen';
 import SettleDebtsScreen from './Divvy/components/SettleDebtsScreen';
 import AddExpenseScreen from './Divvy/components/AddExpenseScreen';
+import GroupMemberScreen from './Divvy/components/groupMemberScreen';
+
+
 
 const PlaceholderScreen = ({ name }: { name: string }) => (
   <View style={styles.screenContainer}>
@@ -170,6 +174,7 @@ const TabBarWrapper = (props: BottomTabBarProps) => {
 
 const MainTabNavigator = () => {
   return (
+    <GroupProvider>
     <Tab.Navigator
      id={undefined}
       initialRouteName="Home"
@@ -182,44 +187,91 @@ const MainTabNavigator = () => {
       <Tab.Screen name="Divvy" component={SettleDebtsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
+    </GroupProvider>
   );
 };
 
+// export default function App() {
+//   const [isLoggedIn, setIsLoggedIn] = useState(false); // default to SignUp screen
+
+//   return (
+//     <GroupProvider>
+//     <NavigationContainer>
+//       {/* <Stack.Navigator
+//       id={undefined}
+//         initialRouteName={isLoggedIn ? 'MainTabs' : 'SignUp'}
+//         screenOptions={{ headerShown: false }}
+//       >
+//         <Stack.Screen name="Login">
+//   {(props) => ( // Receive navigation props here
+//     <LoginScreen 
+//       {...props} // Spread navigation props
+//       setIsLoggedIn={setIsLoggedIn} 
+//     />
+//   )}
+// </Stack.Screen>
+
+//         <Stack.Screen 
+//   name="SignUp"
+// >
+//   {(props) => (
+//     <SignUpScreen 
+//       {...props} 
+//       setIsLoggedIn={setIsLoggedIn} 
+//     />
+//   )}
+// </Stack.Screen>
+//         <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+//         <Stack.Screen name="GroupDetail" component={GroupScreen} />
+//         <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
+//         <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
+//       </Stack.Navigator> */}
+//       <Stack.Navigator
+//   id={undefined}
+//   initialRouteName="GroupMember"
+//   screenOptions={{ headerShown: false }}
+// >
+//   <Stack.Screen name="GroupMember" component={GroupMemberScreen} />
+  
+//   <Stack.Screen name="Login">
+//     {(props) => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+//   </Stack.Screen>
+
+//   <Stack.Screen name="SignUp">
+//     {(props) => <SignUpScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+//   </Stack.Screen>
+
+//   <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+//   <Stack.Screen name="GroupDetail" component={GroupScreen} />
+//   <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
+//   <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
+// </Stack.Navigator>
+
+//     </NavigationContainer>
+//   </GroupProvider>
+//   );
+// }
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // default to SignUp screen
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-      id={undefined}
-        initialRouteName={isLoggedIn ? 'MainTabs' : 'SignUp'}
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="Login">
-  {(props) => ( // Receive navigation props here
-    <LoginScreen 
-      {...props} // Spread navigation props
-      setIsLoggedIn={setIsLoggedIn} 
-    />
-  )}
-</Stack.Screen>
-
-        <Stack.Screen 
-  name="SignUp"
->
-  {(props) => (
-    <SignUpScreen 
-      {...props} 
-      setIsLoggedIn={setIsLoggedIn} 
-    />
-  )}
-</Stack.Screen>
-        <Stack.Screen name="MainTabs" component={MainTabNavigator} />
-        <Stack.Screen name="GroupDetail" component={GroupScreen} />
-        <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
-        <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GroupProvider> {/* ✅ Only here */}
+      <NavigationContainer>
+        <Stack.Navigator id={undefined} initialRouteName="MainTabs" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="GroupMember" component={GroupMemberScreen} />
+          <Stack.Screen name="Login">
+            {(props) => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+          </Stack.Screen>
+          <Stack.Screen name="SignUp">
+            {(props) => <SignUpScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+          </Stack.Screen>
+          <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+          <Stack.Screen name="GroupDetail" component={GroupScreen} />
+          <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
+          <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GroupProvider>
   );
 }
 

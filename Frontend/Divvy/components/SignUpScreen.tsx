@@ -478,7 +478,8 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation, setIsLoggedIn }
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
- const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+
 
 
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -526,49 +527,51 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation, setIsLoggedIn }
   };
   const confirmWheelDate = () => {
     setDate(tempDate);
-    setDateOfBirth(tempDate); // ✅ store actual Date object
+    setDateOfBirth(new Date(tempDate)); // ✅ store actual Date object
     setShowPickerModal(false);
   };
   
-  const handleSignUp = async () => {
-    console.log(firstName, lastName)
-    const formattedDate = dateOfBirth?.toISOString(); // now this is safe
+  // const handleSignUp = async () => {
+  //   console.log(firstName, lastName)
+  //   // Format as 'YYYY-MM-DD'
+  //   const formattedDate = dateOfBirth.toISOString().split("T")[0];
 
 
-    const hardcodedPayload = {
-      first_name: firstName,
-      last_name: lastName,
-      email: email,
-      date_of_birth: "2000-01-01T00:00:00.000Z",
-      phone_number: phoneNumber.replace(/\D/g, ''),
-      password: password
-    };
+
+  //   const hardcodedPayload = {
+  //     first_name: firstName,
+  //     last_name: lastName,
+  //     email: email,
+  //     date_of_birth: formattedDate,
+  //     phone_number: phoneNumber.replace(/\D/g, ''),
+  //     password: password
+  //   };
   
-    try {
-      const response = await fetch('http://localhost:8000/users/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(hardcodedPayload)
-      });
+  //   try {
+  //     const response = await fetch('http://localhost:8000/users/', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(hardcodedPayload)
+  //     });
   
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Unknown error');
-      }
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(errorData.detail || 'Unknown error');
+  //     }
   
-      const result = await response.json();
-      console.log("✅ Hardcoded user created:", result);
-      alert("User successfully created!");
-      // Optionally navigate
-      navigation.navigate("Login");
+  //     const result = await response.json();
+  //     console.log("✅ Hardcoded user created:", result);
+  //     alert("User successfully created!");
+  //     // Optionally navigate
+  //     navigation.navigate("Login");
   
-    } catch (error) {
-      console.error("❌ Error creating user:", error.message);
-      alert(`Error: ${error.message}`);
-    }
-  };
+  //   } catch (error) {
+  //     console.error("❌ Error creating user:", error.message);
+  //     alert(`Error: ${error.message}`);
+  //   }
+  // };
   
   // const handleSignUp = async () => {
   //   if (!firstName || !lastName || !email || !dateOfBirth || !phoneNumber || !password) {
@@ -615,6 +618,52 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation, setIsLoggedIn }
   //   }
   // };
 
+  const handleSignUp = async () => {
+    if (!firstName || !lastName || !email || !dateOfBirth || !phoneNumber || !password) {
+      alert('Please fill in all fields');
+      return;
+    }
+  
+    const formattedDate = dateOfBirth?.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+  
+    const payload = {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      date_of_birth: formattedDate,
+      phone_number: phoneNumber.replace(/\D/g, ''),
+      password,
+    };
+  
+    try {
+      const response = await fetch('http://localhost:8000/users/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Registration failed');
+      }
+  
+      const newUser = await response.json();
+      console.log('✅ User registered:', newUser);
+  
+      // 👇 Automatically log in after registration
+      setIsLoggedIn(true);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MainTabs' }],
+      });
+  
+    } catch (error) {
+      console.error('❌ Error registering user:', error);
+      alert(error.message || 'Something went wrong.');
+    }
+  };
+  
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
@@ -635,7 +684,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation, setIsLoggedIn }
               <TextInput style={styles.input} placeholder="Last Name" value={lastName} onChangeText={setLastName} />
               <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
 
-              <TouchableOpacity style={styles.fullWidthTouchable} onPress={() => {
+              {/* { <TouchableOpacity style={styles.fullWidthTouchable} onPress={() => {
   if (Platform.OS === 'ios') {
     setTempDate(date);
     setShowPickerModal(true);
@@ -649,7 +698,42 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation, setIsLoggedIn }
                 <View style={styles.iconButton}>
                   <Ionicons name="calendar-outline" size={20} color="#6C757D" />
                 </View>
+              </TouchableOpacity> }   */}
+
+            <View style={styles.inputContainer}>
+              <TouchableOpacity
+                style={styles.fullWidthTouchable}
+                onPress={() => {
+                  if (Platform.OS === 'ios') {
+                    setTempDate(date);
+                    setShowPickerModal(true);
+                  } else {
+                    setShowDatePicker(true);
+                  }
+                }}
+              >
+                <View pointerEvents="none">
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Date of Birth"
+                    value={
+                      dateOfBirth
+                        ? dateOfBirth.toLocaleDateString('en-US', {
+                            month: '2-digit',
+                            day: '2-digit',
+                            year: 'numeric',
+                          })
+                        : ''
+                    }
+                    editable={false}
+                  />
+                </View>
+                <View style={styles.iconButton}>
+                  <Ionicons name="calendar-outline" size={20} color="#6C757D" />
+                </View>
               </TouchableOpacity>
+            </View>
+
 
               <View style={styles.phoneInputContainer}>
                 <TouchableOpacity style={styles.countrySelector} onPress={() => alert('Currently only supporting United States (+1)')}>

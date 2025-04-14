@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from schema.users import UserCreate, UserResponse
+from schema.users import UserCreate, UserResponse, UserLogin
 from crud import users as user_crud
 from core.database import get_db
 
@@ -33,6 +33,7 @@ from schema.users import UserCreate, UserResponse
 from crud import users as user_crud
 from core.database import get_db
 import logging
+from models.users import User
 
 router = APIRouter(prefix="/users", tags=["Users"])
 logger = logging.getLogger("api.users")
@@ -73,4 +74,10 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
         logger.warning(f"User not found - ID: {user_id}")
     return user
 
-# Add similar logging to other endpoints...
+# @router.post("/login", response_model=UserResponse)
+# def login(user: UserLogin, db: Session = Depends(get_db)):
+#     db_user = db.query(User).filter(User.email == user.email).first()
+#     if not db_user or db_user.password != user.password:
+#         raise HTTPException(status_code=401, detail="Invalid email or password")
+#     return db_user
+# # Add similar logging to other endpoints...

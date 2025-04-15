@@ -1,257 +1,148 @@
 import React, { useState } from 'react';
-
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
-  StatusBar,
-  Platform,
+  Alert,
   KeyboardAvoidingView,
   ScrollView,
-  Alert,
+  Platform,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { DivvyColors } from '../constants/Colors';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { LoginScreenNavigationProp } from '../types/navigation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { useUser } from '../context/UserContext';
+import { DivvyColors } from '../constants/Colors';
 
-
-// Navigation type
-type AuthStackParamList = {
-  Login: undefined;
-  SignUp: undefined;
-};
-
-
-// type LoginScreenProps = {
-//   navigation: StackNavigationProp<RootStackParamList, 'Login'>;
-//   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-// };
-
-type LoginScreenProps = {
-  navigation: LoginScreenNavigationProp;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, setIsLoggedIn }) => {
-
+const LoginScreen = ({ navigation, setIsLoggedIn }: any) => {
+  const { setUser } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [passwordError, setPasswordError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Mock credentials for demo purposes
-  // In a real app, this would be handled by your authentication API
-  const mockCredentials = {
-    email: 'test@example.com',
-    password: 'password123',
-  };
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   const handleLogin = async () => {
-    setPasswordError('');
-  
-    if (!email.trim() || !validateEmail(email)) {
-      Alert.alert('Error', 'Please enter a valid email');
+    if (!email || !password) {
+      Alert.alert('Missing fields', 'Please enter both email and password.');
       return;
     }
-    if (!password) {
-      Alert.alert('Error', 'Please enter your password');
-      return;
-    }
-  
     setIsLoading(true);
-    const payload = { email, password };
   
     try {
-      const response = await axios.post('http://localhost:8000/login/', payload);
-      console.log('✅ Login response:', response.data);
-  
-      setIsLoggedIn(true);
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'MainTabs' as never }],
+      const response = await fetch('http://localhost:8000/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
+
+      const contentType = response.headers.get('content-type');
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Invalid credentials');
+      }
+  
+      const data = await response.json();
+      //const { access_token, user } = data;
+
+      if (!data.access_token) {
+        console.log('Login failed: Missing access token in response');
+        throw new Error('Login failed: No token received from backend.');
+      }
+  
+      await AsyncStorage.setItem('token', data.access_token);
+      setUser(data.user);
+      setIsLoggedIn(true);
+      navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] });
+  
     } catch (error: any) {
-      const message = error.response?.data?.detail || 'Login failed';
-      console.error('❌ Login error:', message);
-      setPasswordError(message);
+      console.error(error);
+      Alert.alert('Login failed', error.message || 'Something went wrong');
     } finally {
       setIsLoading(false);
     }
   };
   
-  
-  // const handleLogin = () => {
-  //   // Reset previous errors
-  //   setPasswordError('');
-
-  //   // Basic form validation
-  //   if (!email.trim()) {
-  //     Alert.alert('Error', 'Please enter your email');
-  //     return;
-  //   }
-
-  //   if (!validateEmail(email)) {
-  //     Alert.alert('Error', 'Please enter a valid email address');
-  //     return;
-  //   }
-
-  //   if (!password) {
-  //     Alert.alert('Error', 'Please enter your password');
-  //     return;
-  //   }
-
-  //   // Simulate API call
-  //   setIsLoading(true);
-    
-  //   // Simulate network delay
-  //   setTimeout(() => {
-  //     // Check if credentials match (in a real app this would be an API call)
-  //     if (email === mockCredentials.email && password === mockCredentials.password) {
-  //       console.log('Login successful with:', { email, password, rememberMe });
-  //       setIsLoading(false);
-  //       // Navigate to Home screen or dashboard
-  //       // navigation.navigate('Home');
-  //     } else {
-  //       console.log('Login failed');
-  //       setPasswordError('Incorrect email or password. Please try again.');
-  //       setIsLoading(false);
-  //     }
-  //   }, 1000);
-  // };
-
-  const handleGoogleLogin = () => {
-    // Google login logic would go here
-    console.log('Login with Google');
-  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardAvoidingView}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.keyboardAvoidingView}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollView}
+        keyboardShouldPersistTaps="handled"
       >
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <View style={styles.card}>
-            <View style={styles.headerContainer}>
-              <Text style={styles.title}>Log In</Text>
-              <Text style={styles.subtitle}>Enter your email and password to log in.</Text>
+        <View style={styles.card}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.title}>Welcome Back</Text>
+            <Text style={styles.subtitle}>Log in to continue</Text>
+          </View>
+
+          <View style={styles.formContainer}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor="#6C757D"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onChangeText={setEmail}
+                value={email}
+              />
             </View>
 
-            <View style={styles.formContainer}>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, passwordError ? styles.inputError : null]}
-                  placeholder="Email"
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    if (passwordError) setPasswordError('');
-                  }}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  editable={!isLoading}
-                />
-              </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="#6C757D"
+                secureTextEntry
+                onChangeText={setPassword}
+                value={password}
+              />
+            </View>
 
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, passwordError ? styles.inputError : null]}
-                  placeholder="Password"
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    if (passwordError) setPasswordError('');
-                  }}
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
-                  editable={!isLoading}
-                />
-                <TouchableOpacity
-                  style={styles.iconButton}
-                  onPress={() => setShowPassword(!showPassword)}
-                  disabled={isLoading}
-                >
-                  <Ionicons
-                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                    size={20}
-                    color="#6C757D"
-                  />
-                </TouchableOpacity>
-              </View>
-
-              {passwordError ? (
-                <View style={styles.errorContainer}>
-                  <Ionicons name="alert-circle-outline" size={16} color="#E53935" />
-                  <Text style={styles.errorText}>{passwordError}</Text>
-                </View>
-              ) : null}
-
-              <View style={styles.optionsRow}>
-                <TouchableOpacity
-                  style={styles.rememberContainer}
-                  onPress={() => setRememberMe(!rememberMe)}
-                  disabled={isLoading}
-                >
-                  <View style={[styles.checkbox, rememberMe && styles.checkboxChecked]}>
-                    {rememberMe && (
-                      <Ionicons name="checkmark" size={12} color="#FFFFFF" />
-                    )}
-                  </View>
-                  <Text style={styles.rememberText}>Remember me</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity disabled={isLoading}>
-                  <Text style={styles.forgotText}>Forgot Password?</Text>
-                </TouchableOpacity>
-              </View>
-
-              <TouchableOpacity 
-                style={[styles.loginButton, isLoading && styles.loginButtonDisabled]} 
-                onPress={handleLogin}
-                disabled={isLoading}
-              >
-                <Text style={styles.loginButtonText}>
-                  {isLoading ? 'Logging in...' : 'Log In'}
-                </Text>
+            <View style={styles.optionsRow}>
+              <TouchableOpacity style={styles.rememberContainer}>
+                <View style={styles.checkbox} />
+                <Text style={styles.rememberText}>Remember me</Text>
               </TouchableOpacity>
-
-              <View style={styles.divider}>
-                <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>Or</Text>
-                <View style={styles.dividerLine} />
-              </View>
-
-              <TouchableOpacity 
-                style={styles.googleButton} 
-                onPress={handleGoogleLogin}
-                disabled={isLoading}
-              >
-                <View style={styles.googleIcon}>
-                  <Text style={styles.googleLogo}>G</Text>
-                </View>
-                <Text style={styles.googleButtonText}>Continue with Google</Text>
+              <TouchableOpacity>
+                <Text style={styles.forgotText}>Forgot password?</Text>
               </TouchableOpacity>
             </View>
+
+            <TouchableOpacity
+              style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
+              onPress={handleLogin}
+              disabled={isLoading}
+            >
+              <Text style={styles.loginButtonText}>
+                {isLoading ? 'Logging in...' : 'Log In'}
+              </Text>
+            </TouchableOpacity>
+
+            <View style={styles.divider}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <TouchableOpacity style={styles.googleButton}>
+              <View style={styles.googleIcon}>
+                <Text style={styles.googleLogo}>G</Text>
+              </View>
+              <Text style={styles.googleButtonText}>Continue with Google</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>
               Don't have an account?{' '}
-              <Text
+              <Text 
                 style={styles.signUpLink}
                 onPress={() => navigation.navigate('SignUp')}
               >
@@ -259,9 +150,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, setIsLoggedIn }) 
               </Text>
             </Text>
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

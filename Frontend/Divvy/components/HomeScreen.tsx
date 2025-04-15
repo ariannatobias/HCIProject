@@ -305,6 +305,8 @@ export const HomeScreen = () => {
   const theme = Colors.light;
   const navigation = useNavigation<any>();
   const { groups } = useGroups(); // ✅ Correct placement of hook
+  console.log("🔍 Current Groups:", groups);
+
 
   const navigateToGroupDetail = (groupId: string) => {
     navigation.navigate("GroupDetail", { groupId });
@@ -318,7 +320,7 @@ export const HomeScreen = () => {
             <Text style={{ color: "white" }}>D</Text>
           </View>
         </View>
-        <Text style={[styles.welcomeTitle, { color: theme.secondary }]}>Welcome, User!</Text>
+        <Text style={[styles.welcomeTitle, { color: theme.secondary }]}>Welcome, Mitchell!</Text>
       </View>
 
       <ScrollView style={styles.scrollView}>
@@ -328,11 +330,11 @@ export const HomeScreen = () => {
           <View style={styles.balanceInfo}>
             <View style={styles.balanceItem}>
               <Text style={[styles.balanceLabel, { color: theme.text }]}>You Owe:</Text>
-              <Text style={[styles.balanceAmount, { color: theme.negative }]}>$21.30</Text>
+              <Text style={[styles.balanceAmount, { color: theme.negative }]}>$15.00</Text>
             </View>
             <View style={styles.balanceItem}>
               <Text style={[styles.balanceLabel, { color: theme.text }]}>Owed To You:</Text>
-              <Text style={[styles.balanceAmount, { color: theme.positive }]}>$12.15</Text>
+              <Text style={[styles.balanceAmount, { color: theme.positive }]}>$0.00</Text>
             </View>
             <TouchableOpacity style={[styles.button, { backgroundColor: theme.accent }]}>
               <Text style={[styles.buttonText, { color: theme.text }]}>Settle Up</Text>
@@ -355,7 +357,7 @@ export const HomeScreen = () => {
 
           <TouchableOpacity
             style={[styles.button, { backgroundColor: theme.secondary }]}
-            onPress={() => navigation.navigate("GroupMember", { groupName: "New Group" })}
+            onPress={() => navigation.navigate("groupMemberScreen", { groupName: "New Group" })}
           >
             <Ionicons name="add-circle-outline" size={16} color="white" style={styles.buttonIcon} />
             <Text style={[styles.buttonText, { color: "white" }]}>Create Group</Text>

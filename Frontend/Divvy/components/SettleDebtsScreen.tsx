@@ -29,13 +29,14 @@ type SettleDebtsScreenProps = {
 
 const SettleDebtsScreen: React.FC<SettleDebtsScreenProps> = ({ route, navigation }) => {
   const groupId = route?.params?.groupId || 'default-group-id';
-  const groupName = route?.params?.groupName || 'Default Group';
+  // const groupName = route?.params?.groupName || 'Default Group';
+  const groupName = route?.params?.groupName || 'Roomates';
   const [selectedGroup, setSelectedGroup] = useState(groupName);
   
   const debts = [
-    { name: 'Josh', amount: 12.12, avatar: require('../assets/avatars/josh.png'), color: '#FFD700' },
-    { name: 'Arianna', amount: 7.27, avatar: require('../assets/avatars/arianna.png'), color: '#FFDAB9' },
-    { name: 'Mitchell', amount: 10.00, avatar: require('../assets/avatars/mitchell.png'), color: '#FFA07A' },
+    { name: 'Josh', amount: 15.00, avatar: require('../assets/avatars/josh.png'), color: '#FFD700' },
+    { name: 'Arianna', amount: 15.00, avatar: require('../assets/avatars/arianna.png'), color: '#FFDAB9' },
+    { name: 'Mitchell', amount: 15.00, avatar: require('../assets/avatars/mitchell.png'), color: '#FFA07A' },
   ];
   
   const totalAmount = debts.reduce((sum, debt) => sum + debt.amount, 0);

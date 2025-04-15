@@ -108,7 +108,7 @@
 
 // GroupContext.tsx
 
-type Member = {
+export type Member = {
     id: string;
     name: string;
     avatar?: any;

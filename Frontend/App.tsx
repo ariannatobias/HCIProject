@@ -193,6 +193,7 @@ import AddExpenseScreen from './Divvy/components/AddExpenseScreen';
 import groupMemberScreen from './Divvy/components/groupMemberScreen';
 import { GroupProvider } from './Divvy/context/GroupContext';
 import { AuthProvider } from './Divvy/context/AuthContext';
+import { UserProvider } from './Divvy/context/UserContext';
 
 const PlaceholderScreen = ({ name }: { name: string }) => (
   <View style={styles.screenContainer}>
@@ -250,13 +251,48 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isCheckingToken, setIsCheckingToken] = useState(true);
 
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem('token');
+  //       if (token) {
+  //         const payload = JSON.parse(atob(token.split('.')[1]));
+  //         const expiry = payload.exp * 1000;
+  //         if (Date.now() < expiry) {
+  //           setIsLoggedIn(true);
+  //         } else {
+  //           await AsyncStorage.removeItem('token');
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error('Token check failed:', error);
+  //     } finally {
+  //       setIsCheckingToken(false);
+  //     }
+  //   };
+
+  //   checkToken();
+  // }, []);
+
   useEffect(() => {
     const checkToken = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
         if (token) {
-          const payload = JSON.parse(atob(token.split('.')[1]));
+          const parts = token.split('.');
+          if (parts.length !== 3) throw new Error("Invalid token format");
+  
+          const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+          const jsonPayload = decodeURIComponent(
+            atob(base64)
+              .split('')
+              .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+              .join('')
+          );
+  
+          const payload = JSON.parse(jsonPayload);
           const expiry = payload.exp * 1000;
+  
           if (Date.now() < expiry) {
             setIsLoggedIn(true);
           } else {
@@ -264,41 +300,44 @@ export default function App() {
           }
         }
       } catch (error) {
-        console.error('Token check failed:', error);
+        //console.error('Token check failed:', error);
       } finally {
         setIsCheckingToken(false);
       }
     };
-
+  
     checkToken();
   }, []);
+  
 
   if (isCheckingToken) return null; // or a splash screen/loading screen
 
   return (
-    <AuthProvider>
-      <GroupProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-          id={undefined}
-            initialRouteName={isLoggedIn ? 'MainTabs' : 'Login'}
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen name="Login">
-              {(props) => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
-            </Stack.Screen>
-            <Stack.Screen name="SignUp">
-              {(props) => <SignUpScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
-            </Stack.Screen>
-            <Stack.Screen name="MainTabs" component={MainTabNavigator} />
-            <Stack.Screen name="GroupDetail" component={GroupScreen} />
-            <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
-            <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
-            <Stack.Screen name="groupMemberScreen" component={groupMemberScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </GroupProvider>
-    </AuthProvider>
+    <UserProvider>
+      <AuthProvider>
+        <GroupProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+            id={undefined}
+              initialRouteName={isLoggedIn ? 'MainTabs' : 'Login'}
+              screenOptions={{ headerShown: false }}
+            >
+              <Stack.Screen name="Login">
+                {(props) => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+              </Stack.Screen>
+              <Stack.Screen name="SignUp">
+                {(props) => <SignUpScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+              </Stack.Screen>
+              <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+              <Stack.Screen name="GroupDetail" component={GroupScreen} />
+              <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
+              <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
+              <Stack.Screen name="groupMemberScreen" component={groupMemberScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </GroupProvider>
+      </AuthProvider>
+    </UserProvider>
   );
 }
 

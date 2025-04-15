@@ -154,19 +154,50 @@
 #         )
 #     return schemas.GroupOut.from_orm(group)
 
+# from fastapi import APIRouter, Depends, HTTPException
+# from sqlalchemy.orm import Session
+# from schema.users import UserCreate, UserResponse
+# from crud import users as user_crud
+# from core.database import get_db
+# from typing import List
+
+# router = APIRouter(prefix="/users", tags=["Users"])
+
+# @router.post("/", response_model=UserResponse)
+# def create_user(user: UserCreate, db: Session = Depends(get_db)):
+#     return user_crud.create_user(db, user)
+
+# @router.get("/", response_model=List[UserResponse])
+# def get_all_users(db: Session = Depends(get_db)):
+#     return user_crud.get_all_users(db)
+
+# api/users.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from schema.users import UserCreate, UserResponse
+from schema import users as user_schema
 from crud import users as user_crud
-from core.database import get_db
-from typing import List
+from core.database import SessionLocal
+from passlib.hash import bcrypt
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
-@router.post("/", response_model=UserResponse)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@router.post("/", response_model=user_schema.UserResponse)
+def create_user(user: user_schema.UserCreate, db: Session = Depends(get_db)):
+    db_user = user_crud.get_user_by_email(db, user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
     return user_crud.create_user(db, user)
 
-@router.get("/", response_model=List[UserResponse])
-def get_all_users(db: Session = Depends(get_db)):
-    return user_crud.get_all_users(db)
+@router.post("/login", response_model=user_schema.UserResponse)
+def login(user: user_schema.UserLogin, db: Session = Depends(get_db)):
+    db_user = user_crud.get_user_by_email(db, user.email)
+    if not db_user or not bcrypt.verify(user.password, db_user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    return db_user

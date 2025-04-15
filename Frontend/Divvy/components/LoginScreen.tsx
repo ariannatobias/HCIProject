@@ -16,6 +16,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { DivvyColors } from '../constants/Colors';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useUser } from '../context/UserContext';
+
 import { LoginScreenNavigationProp } from '../types/navigation';
 import axios from 'axios';
 
@@ -46,6 +48,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, setIsLoggedIn }) 
   const [passwordError, setPasswordError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+const { setUser } = useUser();
+
+
   // Mock credentials for demo purposes
   // In a real app, this would be handled by your authentication API
   const mockCredentials = {
@@ -57,6 +62,39 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, setIsLoggedIn }) 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
+  // const handleLogin = async () => {
+  //   setPasswordError('');
+  
+  //   if (!email.trim() || !validateEmail(email)) {
+  //     Alert.alert('Error', 'Please enter a valid email');
+  //     return;
+  //   }
+  //   if (!password) {
+  //     Alert.alert('Error', 'Please enter your password');
+  //     return;
+  //   }
+  
+  //   setIsLoading(true);
+  //   const payload = { email, password };
+  
+  //   try {
+  //     const response = await axios.post('http://localhost:8000/login/', payload);
+  //     console.log('✅ Login response:', response.data);
+  
+  //     setIsLoggedIn(true);
+  //     navigation.reset({
+  //       index: 0,
+  //       routes: [{ name: 'MainTabs' as never }],
+  //     });
+  //   } catch (error: any) {
+  //     const message = error.response?.data?.detail || 'Login failed';
+  //     console.error('❌ Login error:', message);
+  //     setPasswordError(message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleLogin = async () => {
     setPasswordError('');
@@ -76,6 +114,18 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, setIsLoggedIn }) 
     try {
       const response = await axios.post('http://localhost:8000/login/', payload);
       console.log('✅ Login response:', response.data);
+  
+      const userData = response.data;
+  
+      // ✅ Set user in context
+      setUser({
+        id: response.data.id,
+        email: response.data.email,
+        first_name: response.data.first_name,
+        last_name: response.data.last_name,
+        name: `${response.data.first_name} ${response.data.last_name}`,
+      });
+      
   
       setIsLoggedIn(true);
       navigation.reset({

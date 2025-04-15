@@ -13,6 +13,7 @@ import ProfileScreen from './Divvy/components/ProfileScreen';
 import AddExpenseScreen from './Divvy/components/AddExpenseScreen';
 import groupMemberScreen from './Divvy/components/groupMemberScreen';
 import { GroupProvider } from './Divvy/context/GroupContext';
+import { AuthProvider, useAuth } from './Divvy/context/AuthContext';
 
 const PlaceholderScreen = ({ name }: { name: string }) => (
   <View style={styles.screenContainer}>
@@ -77,28 +78,37 @@ const MainTabNavigator = () => {
 };
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   
   return (
-    <GroupProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          id={undefined}
-          initialRouteName={isLoggedIn ? "MainTabs" : "Login"}
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="SignUp" component={SignUpScreen} />
-          <Stack.Screen name="MainTabs" component={MainTabNavigator} />
-          <Stack.Screen name="GroupDetail" component={GroupScreen} />
-          <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
-          <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
-          <Stack.Screen name="groupMemberScreen" component={groupMemberScreen} />
+    <AuthProvider>
+      <GroupProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            id={undefined}
+            initialRouteName={isLoggedIn ? "MainTabs" : "Login"}
+            screenOptions={{ headerShown: false }}
+          >
+            {/* <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} /> */}
+            <Stack.Screen name="Login">
+              {(props) => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+            </Stack.Screen>
+            <Stack.Screen name="SignUp">
+              {(props) => <SignUpScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+            </Stack.Screen>
+
+            <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+            <Stack.Screen name="GroupDetail" component={GroupScreen} />
+            <Stack.Screen name="SettleDebts" component={SettleDebtsScreen} />
+            <Stack.Screen name="AddExpense" component={AddExpenseScreen} />
+            <Stack.Screen name="groupMemberScreen" component={groupMemberScreen} />
 
 
-        </Stack.Navigator> 
-      </NavigationContainer>
-      </GroupProvider>
+          </Stack.Navigator> 
+        </NavigationContainer>
+        </GroupProvider>
+    </AuthProvider>
   );
 }
 

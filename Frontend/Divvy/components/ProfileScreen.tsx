@@ -1,156 +1,141 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  StatusBar,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+// import BottomNavigation from './ui/BottomNavigation';
 
-const user = {
-  name: 'Blaine',
-  email: 'blaine@example.com',
-  avatar: require('../assets/avatars/blaine.png'),
-  color: '#87CEEB',
-  totalOwed: 45.63,
-  totalReceived: 32.15,
-};
+const ProfileScreen = () => {
+  return (
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton}>
+          <Text style={styles.backArrow}>{'\u2190'}</Text>
+        </TouchableOpacity>
+        <View style={styles.avatarContainer}>
+          <Image source={require('../assets/avatars/mitchell.png')} style={styles.avatar} />
+          <Text style={styles.username}>mitchell.tawk@gmail.com</Text>
+        </View>
+      </View>
 
-const ProfileScreen: React.FC = () => {
-  const handleEditProfile = () => {
-    alert('Edit Profile clicked');
-  };
+      {/* Info Section */}
+      <ScrollView style={styles.content}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Info</Text>
+          <View style={styles.row}>
+            <Text style={styles.label}>Name</Text>
+            <Text style={styles.value}>Mitchell Tawk</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Email</Text>
+            <Text style={styles.value}>mitchell.tawk@gmail.com</Text>
+          </View>
+        </View>
 
-  const handleViewGroups = () => {
-    alert('View All Groups clicked');
-  };
+        {/* Preferences Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Preferences</Text>
+          <View style={styles.row}>
+            <Text style={styles.label}>Language</Text>
+            <Text style={styles.link}>English</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Notifications</Text>
+            <Text style={styles.link}>Enabled {'>'}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Theme</Text>
+            <Text style={styles.link}>Light</Text>
+          </View>
+        </View>
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+        {/* Account & Settings */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Accounts & Settings</Text>
+          <Text style={styles.link}>Payment Methods {'>'}</Text>
+          <Text style={styles.link}>Change Password {'>'}</Text>
+          <Text style={styles.link}>Help & Feedback {'>'}</Text>
+        </View>
 
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Your Profile</Text>
-      </View>
+        {/* Logout */}
+        <TouchableOpacity style={styles.logout}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
+      </ScrollView>
 
-      <View style={styles.avatarContainer}>
-        <View style={[styles.avatarCircle, { backgroundColor: user.color }]}>
-          <Image source={user.avatar} style={styles.avatarImage} />
-        </View>
-        <Text style={styles.name}>{user.name}</Text>
-        <Text style={styles.email}>{user.email}</Text>
-      </View>
-
-      <View style={styles.statsContainer}>
-        <View style={styles.statCard}>
-          <Text style={styles.statLabel}>You Owe</Text>
-          <Text style={styles.statAmount}>${user.totalOwed.toFixed(2)}</Text>
-        </View>
-        <View style={styles.statCard}>
-          <Text style={styles.statLabel}>You're Owed</Text>
-          <Text style={styles.statAmount}>${user.totalReceived.toFixed(2)}</Text>
-        </View>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.actionsContainer}>
-        <TouchableOpacity style={styles.actionButton} onPress={handleEditProfile}>
-          <Ionicons name="pencil" size={20} color="#fff" />
-          <Text style={styles.actionText}>Edit Profile</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.actionButton} onPress={handleViewGroups}>
-          <Ionicons name="people" size={20} color="#fff" />
-          <Text style={styles.actionText}>View Your Groups</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
-  );
+      {/* <BottomNavigation activeTab="Profile" onTabPress={() => {}} /> */}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F7F7F9',
-  },
-  header: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  avatarContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  avatarCircle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  avatarImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: '600',
-  },
-  email: {
-    fontSize: 14,
-    color: '#555',
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 20,
-  },
-  statCard: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 12,
-    width: '40%',
-    alignItems: 'center',
-    elevation: 2,
-  },
-  statLabel: {
-    fontSize: 14,
-    color: '#777',
-    marginBottom: 6,
-  },
-  statAmount: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  actionsContainer: {
-    paddingHorizontal: 20,
-    gap: 16,
-  },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#41E2BA',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    justifyContent: 'center',
-  },
-  actionText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 10,
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
+  header: {
+    backgroundColor: '#C1F5E4',
+    paddingTop: 60,
+    paddingBottom: 30,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  backButton: {
+    position: 'absolute',
+    left: 20,
+    top: 60,
+  },
+  backArrow: {
+    fontSize: 24,
+    color: '#000',
+  },
+  avatarContainer: {
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    resizeMode: 'contain',
+    marginBottom: 10,
+  },
+  username: {
+    fontWeight: '600',
+    fontSize: 18,
+  },
+  content: {
+    paddingHorizontal: 24,
+    marginBottom: 90,
+  },
+  section: {
+    marginTop: 24,
+  },
+  sectionTitle: {
+    fontWeight: '600',
+    fontSize: 16,
+    marginBottom: 12,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+  },
+  label: {
+    fontSize: 14,
+    color: '#555',
+  },
+  value: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  link: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#2E8C74',
+    paddingVertical: 6,
+  },
+  logout: {
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  logoutText: {
+    fontWeight: 'bold',
+    color: '#FF3B30',
+  },
 });
 
 export default ProfileScreen;

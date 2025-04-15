@@ -1340,16 +1340,16 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
   
   // Mock data for groups
   const groups: Group[] = [
-    { 
-      id: '1', 
-      name: 'Dallas Trip Group',
-      members: [
-        { id: '1', name: 'John' },
-        { id: '2', name: 'Jane' },
-        { id: '3', name: 'Mitchell' },
-        { id: '4', name: 'Blaine ' },
-      ]
-    },
+    // { 
+    //   id: '1', 
+    //   name: 'Dallas Trip Group',
+    //   members: [
+    //     { id: '1', name: 'John' },
+    //     { id: '2', name: 'Jane' },
+    //     { id: '3', name: 'Mitchell' },
+    //     { id: '4', name: 'Blaine ' },
+    //   ]
+    // },
     { 
       id: '2', 
       name: 'Roommates',
@@ -1359,16 +1359,16 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
         { id: '7', name: 'Arianna' },
       ]
     },
-    { 
-      id: '3', 
-      name: 'Family',
-      members: [
-        { id: '8', name: 'John' },
-        { id: '9', name: 'Jane' },
-        { id: '10', name: 'Josh' },
-        { id: '11', name: 'Blaine' },
-      ]
-    },
+    // { 
+    //   id: '3', 
+    //   name: 'Family',
+    //   members: [
+    //     { id: '8', name: 'John' },
+    //     { id: '9', name: 'Jane' },
+    //     { id: '10', name: 'Josh' },
+    //     { id: '11', name: 'Blaine' },
+    //   ]
+    // },
   ];
 
   // Effect to update split amounts when amount, group, or split option changes

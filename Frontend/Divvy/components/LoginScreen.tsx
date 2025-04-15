@@ -20,6 +20,8 @@ const LoginScreen = ({ navigation, setIsLoggedIn }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
+  
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -45,14 +47,16 @@ const LoginScreen = ({ navigation, setIsLoggedIn }: any) => {
       }
   
       const data = await response.json();
-      //const { access_token, user } = data;
+      const { access_token, user } = data;
 
       if (!data.access_token) {
         console.log('Login failed: Missing access token in response');
         throw new Error('Login failed: No token received from backend.');
       }
   
-      await AsyncStorage.setItem('token', data.access_token);
+      await AsyncStorage.setItem('token', access_token);
+      await AsyncStorage.setItem('user', JSON.stringify(user));
+      console.log("Logged in user:", user);
       setUser(data.user);
       setIsLoggedIn(true);
       navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] });

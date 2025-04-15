@@ -312,6 +312,11 @@ export const HomeScreen = () => {
     navigation.navigate("GroupDetail", { groupId });
   };
 
+  const navigateToSettleDebts = (groupId: string, groupName: string) => {
+    navigation.navigate("SettleDebts", { groupId, groupName });
+  };
+  
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
@@ -336,9 +341,19 @@ export const HomeScreen = () => {
               <Text style={[styles.balanceLabel, { color: theme.text }]}>Owed To You:</Text>
               <Text style={[styles.balanceAmount, { color: theme.positive }]}>$0.00</Text>
             </View>
-            <TouchableOpacity style={[styles.button, { backgroundColor: theme.accent }]}>
+            {/* <TouchableOpacity style={[styles.button, { backgroundColor: theme.accent }]}>
               <Text style={[styles.buttonText, { color: theme.text }]}>Settle Up</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            <TouchableOpacity
+                style={[styles.button, { backgroundColor: theme.accent }]}
+                onPress={() => {
+                  const group = groups[0]; // 👈 or however you want to pick the group
+                    navigation.navigate("SettleDebts")
+                }}
+              >
+                <Text style={[styles.buttonText, { color: theme.text }]}>Settle Up</Text>
+</TouchableOpacity>
+
           </View>
         </View>
 
@@ -351,7 +366,7 @@ export const HomeScreen = () => {
             </View>
             <View style={styles.transactionDetails}>
               <Text style={[styles.transactionText, { color: theme.text }]}>You Paid Josh:</Text>
-              <Text style={[styles.transactionAmount, { color: theme.positive }]}>$14.50</Text>
+              <Text style={[styles.transactionAmount, { color: theme.positive }]}>$0.00</Text>
             </View>
           </View>
 

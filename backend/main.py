@@ -1,46 +1,70 @@
-from fastapi import FastAPI
+# from fastapi import FastAPI
 
-from api import users, login, group # This assumes your api/users.py file is structured as a module
-from fastapi.middleware.cors import CORSMiddleware
+# from api import users, login, group # This assumes your api/users.py file is structured as a module
+# from fastapi.middleware.cors import CORSMiddleware
 
-import sys
-import os
+# import sys
+# import os
 
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-# sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-
-
-
-from core.database import Base, engine
-from models import users as user_model  # Ensure this import initializes the models
-# from models import group  # 👈 This must be BEFORE create_all
+# # sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# # sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 
-# Create database tables (runs once at startup)
-print("🚀 Using DB:", engine.url)
 
-Base.metadata.create_all(bind=engine)
+# from core.database import Base, engine
+# from models import users as user_model  # Ensure this import initializes the models
+# # from models import group  # 👈 This must be BEFORE create_all
 
-app = FastAPI(
-    title="Divvy User API",
-    description="Handles user registration and management",
-    version="1.0.0"
-)
+
+# # Create database tables (runs once at startup)
+# print("🚀 Using DB:", engine.url)
+
+# Base.metadata.create_all(bind=engine)
+
+# # app = FastAPI(
+# #     title="Divvy User API",
+# #     description="Handles user registration and management",
+# #     version="1.0.0"
+# # )
 
 
 # app = FastAPI(...)
 
-# Allow React Native access
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Or limit to mobile device IPs
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# # # Allow React Native access
+# # app.add_middleware(
+# #     CORSMiddleware,
+# #     allow_origins=["*"],  # Or limit to mobile device IPs
+# #     allow_credentials=True,
+# #     allow_methods=["*"],
+# #     allow_headers=["*"],
+# # )
 
 
-# Include the user routes
+# # Include the user routes
+# app.include_router(users.router)
+# app.include_router(login.router)
+# app.include_router(group.router)
+
+
+# main.py
+from fastapi import FastAPI
+from api import users, groups, expenses, transactions, settlements
+from core.database import Base, engine
+from models import users as user_model
+from models import users as user_model
+from models import groups as group_model
+from models import expenses as expense_model
+from api import login
+
+
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI()
+
 app.include_router(users.router)
+app.include_router(groups.router)
+app.include_router(expenses.router)
+app.include_router(transactions.router)
 app.include_router(login.router)
-app.include_router(group.router)
+
+app.include_router(settlements.router)

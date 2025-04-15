@@ -4,6 +4,7 @@ export type RootStackParamList = {
   MainTabs: undefined;
   GroupDetail: { groupId: string };
   SettleDebts: { groupId: string; groupName: string };
+  groupMemberScreen: { groupName?: string };
   AddExpense: undefined;
   Login: undefined;
   SignUp: undefined;

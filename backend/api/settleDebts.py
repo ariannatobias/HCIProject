@@ -30,9 +30,6 @@ def get_group_members(group_id: int, db: Session = Depends(get_db)):
 def get_total_debt(group_id: int, db: Session = Depends(get_db)):
     return crud.calculate_total_debt(db, group_id)
 
-
-# ----- Member Endpoints -----
-
 @router.post("/members/", response_model=schemas.Member)
 def create_member(member: schemas.MemberCreate, db: Session = Depends(get_db)):
     return crud.create_member(db, member)

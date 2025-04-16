@@ -300,12 +300,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { useGroups } from "../context/GroupContext";
+import { useUser } from "../context/UserContext";
 
 export const HomeScreen = () => {
   const theme = Colors.light;
   const navigation = useNavigation<any>();
-  const { groups } = useGroups(); // ✅ Correct placement of hook
-  console.log("🔍 Current Groups:", groups);
+  const { groups } = useGroups();
+  const { user } = useUser();
+  console.log("Current Groups:", groups);
 
 
   const navigateToGroupDetail = (groupId: string) => {
@@ -325,7 +327,7 @@ export const HomeScreen = () => {
             <Text style={{ color: "white" }}>D</Text>
           </View>
         </View>
-        <Text style={[styles.welcomeTitle, { color: theme.secondary }]}>Welcome, Mitchell!</Text>
+        <Text style={[styles.welcomeTitle, { color: theme.secondary }]}>Welcome, {user?.first_name}!</Text>
       </View>
 
       <ScrollView style={styles.scrollView}>

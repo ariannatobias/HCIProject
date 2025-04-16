@@ -73,7 +73,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route, navigation }) => {
     {
       id: 1,
       paidBy: 'Josh',
-      category: 'Uber',
+      category: 'Dining',
       description: 'Dinner',
       amount: 45.00,
       date: '07/02/2025',

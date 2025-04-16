@@ -30,7 +30,7 @@ type SettleDebtsScreenProps = {
 const SettleDebtsScreen: React.FC<SettleDebtsScreenProps> = ({ route, navigation }) => {
   const groupId = route?.params?.groupId || 'default-group-id';
   // const groupName = route?.params?.groupName || 'Default Group';
-  const groupName = route?.params?.groupName || 'Roomates';
+  const groupName = route?.params?.groupName || 'Dallas Trip Group';
   const [selectedGroup, setSelectedGroup] = useState(groupName);
   
   const debts = [
@@ -81,9 +81,9 @@ const SettleDebtsScreen: React.FC<SettleDebtsScreenProps> = ({ route, navigation
         <View style={styles.statusBar}>
           <Text style={styles.time}>{getCurrentTime()}</Text>
           <View style={styles.statusIcons}>
-            <View style={styles.signalIcon} />
-            <View style={styles.wifiIcon} />
-            <View style={styles.batteryIcon} />
+                <View style={[styles.signalIcon, { marginRight: 6 }]} />
+                <View style={[styles.wifiIcon, { marginRight: 6 }]} />
+                <View style={styles.batteryIcon} />
           </View>
         </View>
       )}
@@ -111,8 +111,8 @@ const SettleDebtsScreen: React.FC<SettleDebtsScreenProps> = ({ route, navigation
           {/* Group Selection Dropdown */}
           <TouchableOpacity style={styles.dropdownContainer} onPress={handleGroupSelect}>
             <View style={styles.dropdown}>
-              <Text style={styles.dropdownText}>{selectedGroup}</Text>
-              <Text style={styles.dropdownIcon}>▼</Text>
+            <Text style={styles.dropdownText}>{selectedGroup?.toString() || 'Select Group'}</Text>
+            <Text style={styles.dropdownIcon}>▼</Text>
             </View>
           </TouchableOpacity>
           
@@ -175,12 +175,18 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
   },
+  // statusIcons: {
+  //   display: 'flex',
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   gap: 6,
+  // },
   statusIcons: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
   },
+  
+
   signalIcon: {
     backgroundColor: '#000',
     height: 11,

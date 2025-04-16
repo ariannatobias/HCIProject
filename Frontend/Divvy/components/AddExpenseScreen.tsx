@@ -1282,6 +1282,8 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useGroups } from '../context/GroupContext';
+import { useUser } from '../context/UserContext';
 
 // Define the param list for the root stack
 type RootStackParamList = {
@@ -1339,37 +1341,48 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   
   // Mock data for groups
-  const groups: Group[] = [
-    // { 
-    //   id: '1', 
-    //   name: 'Dallas Trip Group',
-    //   members: [
-    //     { id: '1', name: 'John' },
-    //     { id: '2', name: 'Jane' },
-    //     { id: '3', name: 'Mitchell' },
-    //     { id: '4', name: 'Blaine ' },
-    //   ]
-    // },
-    { 
-      id: '2', 
-      name: 'Roommates',
-      members: [
-        { id: '5', name: 'Josh' },
-        { id: '6', name: 'Mitchell' },
-        { id: '7', name: 'Arianna' },
-      ]
-    },
-    // { 
-    //   id: '3', 
-    //   name: 'Family',
-    //   members: [
-    //     { id: '8', name: 'John' },
-    //     { id: '9', name: 'Jane' },
-    //     { id: '10', name: 'Josh' },
-    //     { id: '11', name: 'Blaine' },
-    //   ]
-    // },
-  ];
+  // const groups: Group[] = [
+  //   // { 
+  //   //   id: '1', 
+  //   //   name: 'Dallas Trip Group',
+  //   //   members: [
+  //   //     { id: '1', name: 'John' },
+  //   //     { id: '2', name: 'Jane' },
+  //   //     { id: '3', name: 'Mitchell' },
+  //   //     { id: '4', name: 'Blaine ' },
+  //   //   ]
+  //   // },
+  //   { 
+  //     id: '2', 
+  //     name: ' Trip ',
+  //     members: [
+  //       { id: '5', name: 'Josh' },
+  //       { id: '6', name: 'Mitchell' },
+  //       { id: '7', name: 'Arianna' },
+  //     ]
+  //   },
+  //   // { 
+  //   //   id: '3', 
+  //   //   name: 'Family',
+  //   //   members: [
+  //   //     { id: '8', name: 'John' },
+  //   //     { id: '9', name: 'Jane' },
+  //   //     { id: '10', name: 'Josh' },
+  //   //     { id: '11', name: 'Blaine' },
+  //   //   ]
+  //   // },
+  // ];
+
+  const { groups, currentUser } = useGroups();
+
+  const getGroupMembersWithCurrentUser = () => {
+    if (!selectedGroup) return [];
+    const hasCurrentUser = selectedGroup.members.some(m => m.id === currentUser?.id);
+    if (!hasCurrentUser && currentUser) {
+      return [...selectedGroup.members, currentUser];
+    }
+    return selectedGroup.members;
+  };
 
   // Effect to update split amounts when amount, group, or split option changes
   useEffect(() => {
@@ -1384,28 +1397,61 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
   };
   
   // Handle group selection
+  // const handleGroupSelect = (group: Group) => {
+  //   setSelectedGroup(group);
+  //   setShowGroupModal(false);
+    
+  //   // Auto-select the first member as payer by default
+  //   if (group.members.length > 0 && !selectedPayer) {
+  //     setSelectedPayer(group.members[0]);
+  //   }
+    
+  //   // Initialize members with amounts
+  //   const totalAmount = parseFloat(amount) || 0;
+  //   const memberCount = group.members.length;
+  //   const evenSplit = memberCount > 0 ? totalAmount / memberCount : 0;
+    
+  //   setMembersWithAmounts(
+  //     group.members.map(member => ({
+  //       ...member,
+  //       amount: evenSplit,
+  //       percentage: 100 / memberCount
+  //     }))
+  //   );
+  // };
+
   const handleGroupSelect = (group: Group) => {
-    setSelectedGroup(group);
     setShowGroupModal(false);
-    
-    // Auto-select the first member as payer by default
-    if (group.members.length > 0 && !selectedPayer) {
-      setSelectedPayer(group.members[0]);
+  
+    // Add currentUser to group members if not already there
+    const updatedMembers = currentUser
+      ? [...group.members.filter(m => m.id !== currentUser.id), currentUser]
+      : group.members;
+  
+    const updatedGroup = {
+      ...group,
+      members: updatedMembers,
+    };
+  
+    setSelectedGroup(updatedGroup);
+  
+    if (updatedMembers.length > 0 && !selectedPayer) {
+      setSelectedPayer(updatedMembers[0]);
     }
-    
-    // Initialize members with amounts
+  
     const totalAmount = parseFloat(amount) || 0;
-    const memberCount = group.members.length;
+    const memberCount = updatedMembers.length;
     const evenSplit = memberCount > 0 ? totalAmount / memberCount : 0;
-    
+  
     setMembersWithAmounts(
-      group.members.map(member => ({
+      updatedMembers.map(member => ({
         ...member,
         amount: evenSplit,
-        percentage: 100 / memberCount
+        percentage: 100 / memberCount,
       }))
     );
   };
+  
   
   // Handle payer selection
   const handlePayerSelect = (payer: Member) => {
@@ -1951,7 +1997,12 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
             </View>
             
             <FlatList
-              data={selectedGroup?.members}
+              // data={selectedGroup?.members}
+              data={
+                selectedGroup
+                  ? [...selectedGroup.members.filter(m => m.id !== currentUser?.id), currentUser].filter(Boolean)
+                  : []
+              }              
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableOpacity 

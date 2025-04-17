@@ -35,11 +35,11 @@
 ✔️ **Smart Settlement** – Algorithm to minimize transactions  
 
 ## Folder Structure (Frontend)
-/Divvy
---> /components --> Shared UI and custom components
---> /screens --> App screens (e.g. Login, Group, Profile)
---> /context --> Global contexts (UserContext, GroupContext)
---> /assets --> Images & avatars
+Divvy/
+--> components --> Shared UI and custom components
+--> screens --> App screens (e.g. Login, Group, Profile)
+--> context --> Global contexts (UserContext, GroupContext)
+--> assets --> Images & avatars
 --> App.tsx
 
 ## Folder Structure (Backend)

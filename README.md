@@ -15,6 +15,13 @@
 - User login/Sign Up 
 - Group Creation
 
+| Endpoint              | Method | Description             |
+|-----------------------|--------|-------------------------|
+| `/users/`             | POST   | Register new user       |
+| `/login/`             | POST   | Authenticate user       |
+| `/groups/`            | POST   | Create new group        |
+| `/groups/<groupId>`   | GET    | Fetch group details     |
+
 **Manual Testing**
 - Log in and create a group
 - Verify that new group appears on the home screen 
@@ -26,6 +33,50 @@
 ✔️ **Real-time Updates** – Firebase-powered live data syncing  
 ✔️ **Secure Authentication** – Firebase Auth for seamless login  
 ✔️ **Smart Settlement** – Algorithm to minimize transactions  
+
+## Folder Structure (Frontend)
+/Divvy
+├── /components
+│   └── Shared UI and custom components
+├── /screens
+│   └── App screens (e.g. Login, Group, Profile)
+├── /context
+│   └── Global contexts (UserContext, GroupContext)
+├── /assets
+│   └── Images & avatars
+├── App.tsx
+
+## Folder Structure (Backend)
+backend/
+├── app/
+│   ├── api/                 # Route handler files
+│   │   ├── users.py
+│   │   ├── groups.py        
+│   │   └── expenses.py
+│   │
+│   ├── core/                # Configuration, Database connectivity, Dependencies
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   └── dependencies.py
+│   │
+│   ├── crud/                # DB access functions (CRUD logic)
+│   │   ├── users.py
+│   │   ├── groups.py
+│   │   └── expenses.py
+│   │
+│   ├── models/              # SQLAlchemy models
+│   │   ├── user.py
+│   │   ├── group.py
+│   │   └── expense.py
+│   │
+│   ├── schemas/             # Schemas used for request and response validation 
+│   │   ├── user.py
+│   │   ├── group.py
+│   │   └── expense.py
+│   │
+│   ├── main.py              # FastAPI app entry point
+│   
+
 
 ### Prerequisites  
 - **Node.js** & **npm/yarn** for frontend  
@@ -82,6 +133,8 @@ DROP TABLE groups, member, member_payment_recieve, member_payment_send, payment_
 SELECT * FROM users;
 
 DROP TABLE groups, member, member_payment_recieve, member_payment_send, payment_recieve, payment_send CASCADE;
+
+Make sure your backend is running on `http://localhost:8000/
 
 ## Future Improvements
 - 3rd party payment integration (Venmo, Paypal, CashApp)

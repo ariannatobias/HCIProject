@@ -10,6 +10,16 @@
 **Database:** [PostgreSQL](https://www.postgresql.org/) 🐘  
 **Authentication & Real-time Data:** [Firebase](https://firebase.google.com/) 🔥  
 
+## Testing Instructions
+**User Postman to verify:**
+** - User login/Sign Up **
+** - Group Creation **
+
+**Manual Testing**
+** - Log in and create a group **
+** - Verify that new group appears on the home screen **
+** - Add an expense and verify that group name and members are present in the drop down menus **
+
 ## Features  
 ✔️ **Expense Tracking** – Record shared expenses and assign who owes what  
 ✔️ **Group Management** – Organize expenses by groups (e.g., roommates, trips)  
@@ -72,6 +82,11 @@ DROP TABLE groups, member, member_payment_recieve, member_payment_send, payment_
 SELECT * FROM users;
 
 DROP TABLE groups, member, member_payment_recieve, member_payment_send, payment_recieve, payment_send CASCADE;
+
+## Future Improvements
+** - 3rd party payment integration (Venmo, Paypal, CashApp) **
+** - Loggin in / Signing up with external accounts (Ex: Google) **
+** - Push Notifications **
 
 
 ## License  

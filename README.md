@@ -84,14 +84,17 @@ npm install
 
 (Clean install if you run into issues): rm -rf node_modules && rm package-lock.json && npm install
 
-npx expo start —clear
+Local IP Address:ipconfig getifaddr en0
 
-Add these to signupscreen placeholder fields: placeholderTextColor="#888"
+Modify these files with the address: api.ts, index.ts
+
+npx expo start —clear
 
 
 Backend:
 
-main.py:from fastapi.middleware.cors import CORSMiddleware
+main.py:
+from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
@@ -112,10 +115,6 @@ PYTHONPATH=./backend uvicorn backend.main:app --reload
 
 Database:
 
-Local IP Address:ipconfig getifaddr en0
-
-Modify these files with the address: api.ts, index.ts
-
 psql -U postgres -d divvy
 
 DROP TABLE groups, member, member_payment_recieve, member_payment_send, payment_recieve, payment_send CASCADE;
@@ -123,8 +122,6 @@ DROP TABLE groups, member, member_payment_recieve, member_payment_send, payment_
 \dt
 
 SELECT * FROM users;
-
-DROP TABLE groups, member, member_payment_recieve, member_payment_send, payment_recieve, payment_send CASCADE;
 
 Make sure your backend is running on `http://localhost:8000/
 

@@ -21,7 +21,58 @@
 - **Node.js** & **npm/yarn** for frontend  
 - **Python 3.8+** for backend  
 - **PostgreSQL** for database  
-- **Firebase Account**  
+- **Firebase Account**
+
+### Divvy Command Lines to run:
+Frontend:
+npm install
+
+//npm install react-native-dotenv
+
+(Clean install if you run into issues): rm -rf node_modules && rm package-lock.json && npm install
+
+npx expo start —clear
+
+Add these to signupscreen placeholder fields: placeholderTextColor="#888"
+
+
+Backend:
+
+main.py:from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow any origin for dev
+    allow_credentials=True,
+    allow_methods=["*"],  # <-- Needed to allow OPTIONS
+    allow_headers=["*"],
+)
+
+Zsh terminal:
+pip install "fastapi[all]" "passlib[bcrypt]" sqlalchemy asyncpg psycopg2-binary python-dotenv databases email-validator python-multipart python-jose uvicorn
+
+Bash terminal:pip install "fastapi[all]" sqlalchemy asyncpg psycopg2-binary passlib[bcrypt] python-dotenv databases email-validator python-multipart python-jose uvicorn
+
+PYTHONPATH=./backend uvicorn backend.main:app --reload
+
+
+
+Database:
+
+Local IP Address:ipconfig getifaddr en0
+
+Modify these files with the address: api.ts, index.ts
+
+psql -U postgres -d divvy
+
+DROP TABLE groups, member, member_payment_recieve, member_payment_send, payment_recieve, payment_send CASCADE;
+
+\dt
+
+SELECT * FROM users;
+
+DROP TABLE groups, member, member_payment_recieve, member_payment_send, payment_recieve, payment_send CASCADE;
+
 
 ## License  
 MIT License © 2025 **Divvy Team**  

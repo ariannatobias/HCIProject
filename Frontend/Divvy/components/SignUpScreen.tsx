@@ -166,13 +166,14 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
             </View>
 
             <View style={styles.formContainer}>
-              <TextInput style={styles.input} placeholder="First Name" onChangeText={(text) => handleInputChange('first_name', text)} />
+              <TextInput style={styles.input} placeholder="First Name" placeholderTextColor="#888" onChangeText={(text) => handleInputChange('first_name', text)} />
               {formErrors.first_name && <Text style={styles.error}>{formErrors.first_name}</Text>}
+              
 
-              <TextInput style={styles.input} placeholder="Last Name" onChangeText={(text) => handleInputChange('last_name', text)} />
+              <TextInput style={styles.input} placeholder="Last Name" placeholderTextColor="#888" onChangeText={(text) => handleInputChange('last_name', text)} />
               {formErrors.last_name && <Text style={styles.error}>{formErrors.last_name}</Text>}
 
-              <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" autoCapitalize="none" onChangeText={(text) => handleInputChange('email', text)} />
+              <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#888" keyboardType="email-address" autoCapitalize="none" onChangeText={(text) => handleInputChange('email', text)} />
               {formErrors.email && <Text style={styles.error}>{formErrors.email}</Text>}
 
               <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.inputRow}>
@@ -196,6 +197,7 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
               <TextInput
                 style={styles.input}
                 placeholder="Phone Number"
+                placeholderTextColor="#888"
                 keyboardType="phone-pad"
                 value={form.phone}
                 onFocus={() => setShowDatePicker(false)}
@@ -207,6 +209,7 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
                 <TextInput
                   style={styles.input}
                   placeholder="Password"
+                  placeholderTextColor="#888"
                   secureTextEntry={!showPassword}
                   onChangeText={(text) => handleInputChange('password', text)}
                 />
@@ -220,6 +223,7 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
                 <TextInput
                   style={styles.input}
                   placeholder="Confirm Password"
+                  placeholderTextColor="#888"
                   secureTextEntry={!showConfirmPassword}
                   onChangeText={(text) => setConfirmPassword(text)}
                 />

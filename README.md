@@ -36,37 +36,26 @@
 
 ## Folder Structure (Frontend)
 /Divvy
- /components --> Shared UI and custom components
- /screens --> App screens (e.g. Login, Group, Profile)
- /context --> Global contexts (UserContext, GroupContext)
- /assets --> Images & avatars
- App.tsx
+--> /components --> Shared UI and custom components
+--> /screens --> App screens (e.g. Login, Group, Profile)
+--> /context --> Global contexts (UserContext, GroupContext)
+--> /assets --> Images & avatars
+--> App.tsx
 
 ## Folder Structure (Backend)
-backend/
-    app/
-      api/                 # Route handler files
-        users.py
-        groups.py        
-       expenses.py
-   core/                  # Configuration, Database connectivity, Dependencies
-      config.py
-        database.py
-        dependencies.py
-   crud/                  # DB access functions (CRUD logic)
-      users.py
-      groups.py
-      expenses.py
-   models/                # SQLAlchemy models
-      user.py
-      group.py
-      expense.py
-   schemas/               # Schemas used for request and response validation 
-      user.py
-      group.py
-      expense.py
+backend/ 
+app/ 
+ --> api/  --> users.py, groups.py, expenses.py              # Route handler files
 
-   main.py              # FastAPI app entry point
+ --> core/ config.py, database.py, dependencies.py           # Configuration, Database connectivity, Dependencies
+
+ --> crud/ users.py, groups.py, expenses.py                  # DB access functions (CRUD logic)
+
+ --> models/ user.py, group.py, expense.py                   # SQLAlchemy models
+
+ --> schemas/  user.py, group.py, expense.py                 # Schemas used for request and response validation 
+
+ main.py                                                     # FastAPI app entry point
    
 
 

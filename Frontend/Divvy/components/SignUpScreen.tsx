@@ -16,6 +16,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUser } from '../context/UserContext';
 import { DivvyColors } from '../constants/Colors';
+<<<<<<< Updated upstream
+=======
+import { Ionicons } from '@expo/vector-icons';
+>>>>>>> Stashed changes
 
 const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
   const { setUser } = useUser();
@@ -29,6 +33,12 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
     password: '',
   });
 
+<<<<<<< Updated upstream
+=======
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+>>>>>>> Stashed changes
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +51,7 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
 
   const formatPhoneNumber = (value: string) => {
     const digits = value.replace(/\D/g, '').slice(0, 10);
+<<<<<<< Updated upstream
     let formatted = '';
   
     if (digits.length <= 3) {
@@ -59,12 +70,27 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
     handleInputChange('phone', formatted);
   
     // Only show error if full 10 digits are not entered
+=======
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+  };
+
+  const handlePhoneChange = (input: string) => {
+    const formatted = formatPhoneNumber(input);
+    handleInputChange('phone', formatted);
+
+>>>>>>> Stashed changes
     if (formatted.replace(/\D/g, '').length < 10) {
       setFormErrors((prev) => ({ ...prev, phone: 'Phone number must be 10 digits.' }));
     } else {
       setFormErrors((prev) => ({ ...prev, phone: '' }));
     }
+<<<<<<< Updated upstream
   };  
+=======
+  };
+>>>>>>> Stashed changes
 
   const calculateAge = (date: Date) => {
     const diff = Date.now() - date.getTime();
@@ -77,12 +103,20 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
 
     if (!form.first_name) errors.first_name = 'Required';
     if (!form.last_name) errors.last_name = 'Required';
+<<<<<<< Updated upstream
     if (!form.phone) errors.phone = 'Required';
+=======
+
+    if (!form.phone || form.phone.replace(/\D/g, '').length < 10) {
+      errors.phone = 'Phone number must be 10 digits.';
+    }
+>>>>>>> Stashed changes
 
     if (!form.email.includes('@') || !form.email.includes('.')) {
       errors.email = 'Email not valid.';
     }
 
+<<<<<<< Updated upstream
     const password = form.password;
     const passwordRegex =
       /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])(?=.{10,})/;
@@ -90,6 +124,15 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
     if (!passwordRegex.test(password)) {
       errors.password =
         'Password must include a capital letter, number, symbol, and be at least 10 characters.';
+=======
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9])(?=.{10,})/;
+    if (!passwordRegex.test(form.password)) {
+      errors.password = 'Password must include a capital letter, number, symbol, and be at least 10 characters.';
+    }
+
+    if (confirmPassword !== form.password) {
+      errors.confirm = 'Passwords do not match.';
+>>>>>>> Stashed changes
     }
 
     if (age < 16) {
@@ -102,6 +145,10 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
       Alert.alert('Invalid Submission', 'Please fix one or more fields and try again.');
       return false;
     }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     return true;
   };
 
@@ -148,7 +195,10 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
       setUser(user);
       setIsLoggedIn(true);
       navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] });
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     } catch (error: any) {
       console.error(error);
       Alert.alert('Error', error.message || 'Something went wrong');
@@ -158,10 +208,14 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
   };
 
   return (
+<<<<<<< Updated upstream
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.keyboardAvoidingView}
     >
+=======
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingView}>
+>>>>>>> Stashed changes
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.scrollView} keyboardShouldPersistTaps="handled">
           <View style={styles.card}>
@@ -171,6 +225,7 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
             </View>
 
             <View style={styles.formContainer}>
+<<<<<<< Updated upstream
               <TextInput
                 style={styles.input}
                 placeholder="First Name"
@@ -193,11 +248,25 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
                 onChangeText={(text) => handleInputChange('email', text)}
               />
               {formErrors.email ? <Text style={styles.error}>{formErrors.email}</Text> : null}
+=======
+              <TextInput style={styles.input} placeholder="First Name" onChangeText={(text) => handleInputChange('first_name', text)} />
+              {formErrors.first_name && <Text style={styles.error}>{formErrors.first_name}</Text>}
+
+              <TextInput style={styles.input} placeholder="Last Name" onChangeText={(text) => handleInputChange('last_name', text)} />
+              {formErrors.last_name && <Text style={styles.error}>{formErrors.last_name}</Text>}
+
+              <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" autoCapitalize="none" onChangeText={(text) => handleInputChange('email', text)} />
+              {formErrors.email && <Text style={styles.error}>{formErrors.email}</Text>}
+>>>>>>> Stashed changes
 
               <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.inputRow}>
                 <Text style={styles.dateText}>{form.dob.toDateString()}</Text>
               </TouchableOpacity>
+<<<<<<< Updated upstream
               {formErrors.dob ? <Text style={styles.error}>{formErrors.dob}</Text> : null}
+=======
+              {formErrors.dob && <Text style={styles.error}>{formErrors.dob}</Text>}
+>>>>>>> Stashed changes
 
               {showDatePicker && (
                 <DateTimePicker
@@ -211,6 +280,10 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
                   }}
                 />
               )}
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
               <TextInput
                 style={styles.input}
                 placeholder="Phone Number"
@@ -219,6 +292,7 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
                 onFocus={() => setShowDatePicker(false)}
                 onChangeText={handlePhoneChange}
               />
+<<<<<<< Updated upstream
               {formErrors.phone ? <Text style={styles.error}>{formErrors.phone}</Text> : null}
               <TextInput
                 style={styles.input}
@@ -237,15 +311,51 @@ const SignUpScreen = ({ navigation, setIsLoggedIn }: any) => {
                 <Text style={styles.signUpButtonText}>
                   {isLoading ? 'Signing up...' : 'Sign Up'}
                 </Text>
+=======
+              {formErrors.phone && <Text style={styles.error}>{formErrors.phone}</Text>}
+
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  secureTextEntry={!showPassword}
+                  onChangeText={(text) => handleInputChange('password', text)}
+                />
+                <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
+                  <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color="#6C757D" />
+                </TouchableOpacity>
+              </View>
+              {formErrors.password && <Text style={styles.error}>{formErrors.password}</Text>}
+
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Confirm Password"
+                  secureTextEntry={!showConfirmPassword}
+                  onChangeText={(text) => setConfirmPassword(text)}
+                />
+                <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  <Ionicons name={showConfirmPassword ? 'eye-off' : 'eye'} size={20} color="#6C757D" />
+                </TouchableOpacity>
+              </View>
+              {formErrors.confirm && <Text style={styles.error}>{formErrors.confirm}</Text>}
+
+              <TouchableOpacity style={[styles.signUpButton, isLoading && styles.signUpButtonDisabled]} onPress={handleSignUp} disabled={isLoading}>
+                <Text style={styles.signUpButtonText}>{isLoading ? 'Signing up...' : 'Sign Up'}</Text>
+>>>>>>> Stashed changes
               </TouchableOpacity>
             </View>
 
             <View style={styles.footer}>
               <Text style={styles.footerText}>
+<<<<<<< Updated upstream
                 Already have an account?{' '}
                 <Text style={styles.signInLink} onPress={() => navigation.navigate('Login')}>
                   Log In
                 </Text>
+=======
+                Already have an account? <Text style={styles.signInLink} onPress={() => navigation.navigate('Login')}>Log In</Text>
+>>>>>>> Stashed changes
               </Text>
             </View>
           </View>
@@ -314,6 +424,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000',
   },
+<<<<<<< Updated upstream
+=======
+  passwordContainer: {
+    position: 'relative',
+    marginBottom: 8,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
+    top: 15,
+  },
+>>>>>>> Stashed changes
   signUpButton: {
     height: 50,
     backgroundColor: DivvyColors.turquoise,

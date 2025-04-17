@@ -36,46 +36,38 @@
 
 ## Folder Structure (Frontend)
 /Divvy
-├── /components
-│   └── Shared UI and custom components
-├── /screens
-│   └── App screens (e.g. Login, Group, Profile)
-├── /context
-│   └── Global contexts (UserContext, GroupContext)
-├── /assets
-│   └── Images & avatars
-├── App.tsx
+ /components --> Shared UI and custom components
+ /screens --> App screens (e.g. Login, Group, Profile)
+ /context --> Global contexts (UserContext, GroupContext)
+ /assets --> Images & avatars
+ App.tsx
 
 ## Folder Structure (Backend)
 backend/
-├── app/
-│   ├── api/                 # Route handler files
-│   │   ├── users.py
-│   │   ├── groups.py        
-│   │   └── expenses.py
-│   │
-│   ├── core/                # Configuration, Database connectivity, Dependencies
-│   │   ├── config.py
-│   │   ├── database.py
-│   │   └── dependencies.py
-│   │
-│   ├── crud/                # DB access functions (CRUD logic)
-│   │   ├── users.py
-│   │   ├── groups.py
-│   │   └── expenses.py
-│   │
-│   ├── models/              # SQLAlchemy models
-│   │   ├── user.py
-│   │   ├── group.py
-│   │   └── expense.py
-│   │
-│   ├── schemas/             # Schemas used for request and response validation 
-│   │   ├── user.py
-│   │   ├── group.py
-│   │   └── expense.py
-│   │
-│   ├── main.py              # FastAPI app entry point
-│   
+    app/
+      api/                 # Route handler files
+        users.py
+        groups.py        
+       expenses.py
+   core/                  # Configuration, Database connectivity, Dependencies
+      config.py
+        database.py
+        dependencies.py
+   crud/                  # DB access functions (CRUD logic)
+      users.py
+      groups.py
+      expenses.py
+   models/                # SQLAlchemy models
+      user.py
+      group.py
+      expense.py
+   schemas/               # Schemas used for request and response validation 
+      user.py
+      group.py
+      expense.py
+
+   main.py              # FastAPI app entry point
+   
 
 
 ### Prerequisites  

@@ -1,7 +1,7 @@
 # **Divvy**  
 *A simple and efficient way to manage shared expenses*
 
-## 🚀 Quick Start Instructions  
+## Quick Start Instructions  
 
 ### Frontend Setup  
 1. Navigate to the frontend directory and run:  
@@ -75,12 +75,12 @@ Make sure the backend is running at:
 
 ---
 
-## 📱 Overview  
+## Overview  
 **Divvy** is a full-stack mobile application designed to make splitting expenses seamless. Whether you're sharing rent, covering a group dinner, or keeping track of trip expenses, **Divvy** helps you manage and settle debts efficiently.
 
 ---
 
-## 🧪 Testing Instructions  
+## Testing Instructions  
 
 ### API Testing with Postman  
 Test endpoints like login, signup, and group creation:
@@ -99,7 +99,7 @@ Test endpoints like login, signup, and group creation:
 
 ---
 
-## 🔧 Tech Stack  
+## Tech Stack  
 - **Frontend:** [React Native](https://reactnative.dev/) ⚛️  
 - **Backend:** [FastAPI](https://fastapi.tiangolo.com/) 🚀  
 - **Database:** [PostgreSQL](https://www.postgresql.org/) 🐘  
@@ -107,7 +107,7 @@ Test endpoints like login, signup, and group creation:
 
 ---
 
-## ✨ Features  
+## Features  
 ✔️ **Expense Tracking** – Record shared expenses and assign who owes what  
 ✔️ **Group Management** – Organize expenses by groups (e.g., roommates, trips)  
 ✔️ **Real-time Updates** – Firebase-powered live data syncing  
@@ -116,7 +116,7 @@ Test endpoints like login, signup, and group creation:
 
 ---
 
-## 📁 Folder Structure  
+## Folder Structure  
 
 ### Frontend
 ```
@@ -142,12 +142,12 @@ backend/
 
 ---
 
-## 🔮 Future Improvements  
+## Future Improvements  
 - 3rd party payment integrations (Venmo, PayPal, CashApp)  
 - OAuth login options (e.g., Google)  
 - Push notifications  
 
 ---
 
-## 📝 License  
+## License  
 MIT License © 2025 **Divvy Team**

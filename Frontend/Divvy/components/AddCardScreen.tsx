@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import BottomNavigation from './ui/BottomNavigation';
+import BottomNavigation from './BottomNavigation';
 
 const AddCardScreen = () => {
   const [cardHolder, setCardHolder] = useState('');
